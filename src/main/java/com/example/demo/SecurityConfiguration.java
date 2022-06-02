@@ -28,7 +28,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
             .logout()
                 .logoutSuccessUrl("/login?logout=true").permitAll();
 
-        httpSecurity.csrf().ignoringAntMatchers("/h2-console/**");
+        httpSecurity.csrf().ignoringAntMatchers("/jdbc:mysql://root@127.0.0.1:3306/tododb/**");
     httpSecurity.headers().frameOptions().sameOrigin();
     }
     @Autowired

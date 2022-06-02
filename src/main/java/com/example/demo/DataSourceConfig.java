@@ -11,10 +11,10 @@ public class DataSourceConfig {
     @Bean
     public DataSource getDataSource(){
         DataSourceBuilder dsb= DataSourceBuilder.create();
-        dsb.driverClassName("org.h2.Driver");
-        dsb.url("jdbc:h2:mem:testdb");
-        dsb.username("SA");
-        dsb.password("");
+        dsb.driverClassName("com.mysql.cj.jdbc.Driver");
+        dsb.url("jdbc:mysql://root@127.0.0.1:3306/tododb");
+        dsb.username("root");
+        dsb.password("CS321proj");
         return dsb.build();
     }
 }

@@ -12,26 +12,26 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name="users_db") public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column (name = "username")
+    @Column (name = "username", nullable = false, length = 45)
     @NotEmpty
     private String username;
 
-    @Column (name = "email")
+    @Column (name = "email", nullable = false, unique = true, length = 45)
     @NotEmpty
     private String email;
 
-    @Column (name = "password")
+    @Column (name = "password", nullable = false, length = 60)
     @NotEmpty
     private String password;
 
-    @Column (name = "first_name")
+    @Column (name = "first_name", nullable = false, length = 20)
     @NotEmpty
     private String firstName;
 
-    @Column (name = "last_name")
+    @Column (name = "last_name", nullable = false, length = 20)
     @NotEmpty
     private String lastName;
 
