@@ -43,9 +43,9 @@ public class HomeController {
         //Pricnple retains all the information for the current user
     public String secure(Principal principal, Model model){
         String username = principal.getName();
-        //model.addAttribute("user", userRepository.findByUsername(username));
+        model.addAttribute("user", userRepository.findByUsername(username));
         //How to add the role into the model after matching it with user name
-       //model.addAttribute("roles", roleRepository.findAllByUsername(username));
+       model.addAttribute("roles", roleRepository.findAllByUsername(username));
 
        /*Optional from instead of having to return a set from the Rolerepository
         Set<Role> roles = new HashSet<Role>();
