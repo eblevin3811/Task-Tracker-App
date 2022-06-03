@@ -30,6 +30,7 @@ public class UserRepositoryTests {
         user.setLastName("Last");
         user.setUsername("testUser");
         user.setEnabled(true);
+        user.setGroupId(0);
 
         User savedUser = repository.save(user);
 

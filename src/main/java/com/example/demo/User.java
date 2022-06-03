@@ -38,6 +38,9 @@ import javax.validation.constraints.Size;
     @Column (name = "enabled")
     private boolean enabled;
 
+    @Column (name = "groupId")
+    private int groupId;
+
     public User() {
     }
     public void setPassword(String password) {
@@ -47,13 +50,22 @@ import javax.validation.constraints.Size;
          this.password = "";
     }
 
-    public User(String username, String email, String password, String firstName, String lastName, boolean enabled) {
+    public User(String username, String email, String password, String firstName, String lastName, boolean enabled, int groupId) {
         this.username = username;
         this.email = email;
         this.setPassword(password);
         this.firstName = firstName;
         this.lastName = lastName;
         this.enabled = enabled;
+        this.groupId = groupId;
+    }
+
+    public int getGroupId(){
+        return groupId;
+    }
+
+    public void setGroupId(int newId){
+        groupId = newId;
     }
 
     public long getId() {

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlsn="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a new task</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/stylesheet.css"/>
+</head>
+<body>
+
+    <h2>Create New Task</h2>
+    <div class="container">
+        <form th:action="@{/add-todo}" th:object="${Task}" method="post">
+            <table>
+                <tr>
+                    <th scope="row"><label>Task Name:</label></th>
+                    <td><input type = "text" th:field="*{nameField}" placeholder="ex: Wash car"></td>
+                </tr>
+                <tr>
+                    <th scope = "row"><label>Task Description:</label></th>
+                    <td><input type = "text" th:field="*{descField}" placeholder = "ex: Take car to Bob's Car Wash"></td>
+                </tr>
+                <tr>
+                    <th scope = "row"><label>Deadline:</label></th>
+                    <td><input type = "text" th:field="*{dateField}" placeholder="yyyy-MM-DD"></td>
+                </tr>
+            </table>
+            <input type = "submit" value = "Add to task list">
+        </form>
+    </div>
+</body>
+</html>

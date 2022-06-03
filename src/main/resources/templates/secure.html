@@ -6,15 +6,19 @@
     <link rel="stylesheet" type="text/css" href="../static/css/stylesheet.css"/>
 </head>
 <body>
-<!--Passed infro: the whole class os User(username,email,pass,first{+last_name, enalbed)-->
+<!--Passed info: the whole class os User(username,email,pass,first{+last_name, enalbed)-->
 <h2>Secured Page</h2>
+
 <h4>User Name:</h4>
-<p>[[${user.lastName}]], [[${user.firstName}]]</p>
-<p>Email: [[${user.email}]]</p>
-<p>userName: [[${user.username}]]</p>
+<div>
+    <p>[[${user.lastName}]], [[${user.firstName}]]</p>
+    <p>Email: [[${user.email}]]</p>
+    <p>userName: [[${user.username}]]</p>
+</div>
+
 <p>Roles: </p>
 <div th:each="role: ${roles}">
-<p>Role: [[${role.role}]]</p>
+    <p>Role: [[${role.role}]]</p>
 </div>
 
 </body>
