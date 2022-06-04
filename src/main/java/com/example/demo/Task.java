@@ -29,9 +29,14 @@ public class Task {
 
     @Column (name = "completionStatus", nullable = false, length = 45)
     private boolean completionStatus;
-
+    
     public Task(){
-
+        //Ben added this
+        id = 0;
+        name = "";
+        username = "";
+        description = "";
+        deadline = "";
     }
 
     public Task(String name, String description, String username, String deadline, boolean completionStatus){
