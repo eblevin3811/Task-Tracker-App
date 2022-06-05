@@ -1,38 +1,48 @@
 <!DOCTYPE html>
-<html lang="en" xmlsn="http://www.thymeleaf.org" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/stylesheet.css"/>
+    <base href="/">
+    <link href="static/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
     <div class="container">
-        <table class="table table-striped" cellspacing="20">
-            <caption>Your current to-dos:</caption>
-            <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Deadline</th>
-                    <th>Completion Status</th>
-                    <th>Mark Complete</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <th:each>
-                    <td th:text="${todo.desc}">Desc</td>
-                    <td th:text="${#dates.format(todo.targetDate, 'dd.MM/yyyy')}">Deadline</td>
-                    <td th:text="${todo.done}">Completion</td>
-                    <td>
-                        <input type="checkbox" data-toggle="toggle" th:checked="${todo.done}"/>
-                    </td>
-                </th:each>
-            </tbody>
-        </table>
+
+        <div th:if="${#lists.isEmpty(taskList)}">
+            No current to-dos.
+        </div>
+
+        <div th:unless="${#lists.isEmpty(taskList)}">
+            <table class="table table-striped" cellspacing="20">
+                <caption>Your current to-dos:</caption>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Description</th>
+                        <th>Deadline</th>
+                        <th>Completion Status</th>
+                        <th>Mark Complete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each = "todo, todoStat: ${taskList}">
+                        <td th:text="${todoStat.count}"></td>
+                        <td th:text="${todo.description}"></td>
+                        <td th:text="${#dates.format(todo.deadline, 'dd.MM/yyyy')}"></td>
+                        <td th:text="${todo.completionStatus}"></td>
+                        <td>
+                            <input type="checkbox" data-toggle="toggle" th:checked="${todo.completionStatus}"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <br/>
+        <a type="button" href="/add-todo">Create new task</a>
     </div>
 
-    <div>
-        <a class="button" href="/add-todo">Add a task</a>
-    </div>
+
 </body>
 </html>

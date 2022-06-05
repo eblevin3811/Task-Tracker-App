@@ -12,8 +12,8 @@ public class DataSourceConfig {
     public DataSource getDataSource(){
         DataSourceBuilder dsb= DataSourceBuilder.create();
         dsb.driverClassName("com.mysql.cj.jdbc.Driver");
-        dsb.url("jdbc:mysql://root@127.0.0.1:3306/tododb");
-        dsb.username("root");
+        dsb.url("jdbc:mysql://admin@tododb.cluster-ck5cshs9f6iu.us-east-1.rds.amazonaws.com:3306/tododb");
+        dsb.username("admin");
         dsb.password("CS321proj");
         return dsb.build();
     }

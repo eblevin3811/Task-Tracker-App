@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/stylesheet.css"/>
+    <base href="/">
+    <link href="static/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <h2>Welcome, This is the main page!</h2>
 <a href="/admin">Admin Page</a> <br/>
+<a href="/list-todos">View your tasks</a>
 
 <!--If registeration worked sucessfully a message is going to show -->
 <div th:if="${param.message}">

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/stylesheet.css"/>
+    <base href="/">
+    <link href="static/css/stylesheet.css" rel="stylesheet"/>
 </head>
 <body>
 <h2> Registration </h2>
@@ -40,11 +41,14 @@
     </strong></mark>
     <br/>
 
+    Group ID: <input type="text" placeholder="If no group, enter 0" th:field="*{groupID}" id="groupID"/>
+    <mark><strong>
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Invalid group ID</span>
+    </strong></mark>
+    <br/>
+
     <input type="submit" value="Register">
     <div th:if="${param.logout}">You have been logged out</div>
-
-
-
 
 </form>
 

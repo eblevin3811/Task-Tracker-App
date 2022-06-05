@@ -1,6 +1,8 @@
 package com.example.demo;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -78,8 +80,12 @@ public class Task {
         return description;
     }
 
-    public String getDeadline(){
-        return deadline;
+    public Date getDeadline(){
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd").parse(deadline);
+        } catch (ParseException e) {
+            return new Date("0000-00-00");
+        }
     }
 
     public boolean getCompletionStatus(){

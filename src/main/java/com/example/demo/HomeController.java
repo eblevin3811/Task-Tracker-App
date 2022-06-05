@@ -11,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Controller
 public class HomeController {
@@ -21,6 +25,9 @@ public class HomeController {
 
     @Autowired
     RoleRepository roleRepository;
+
+    @Autowired
+    TaskRepository taskRepository;
 
     @RequestMapping("/")
     public String index() {
@@ -79,6 +86,41 @@ public class HomeController {
         roleRepository.save(role);
     }
 return "index";
+    }
+
+    @RequestMapping("/list-todos")
+    public String listTodos(Principal principal, Model model){
+        //Get user identifier
+        String username = principal.getName();
+
+        //Get list of all tasks associated with user
+        Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+        //Add tasks to list-todos list
+        model.addAttribute(taskList);
+
+        return "list-todos";
+    }
+
+    @RequestMapping("/add-todo")
+    public String showAddTodoPage(Model model) {
+        model.addAttribute("task", new Task());
+        return "add-todo";
+    }
+
+    @PostMapping("/add-todo")
+    public String processAddTodoPage(@Valid @ModelAttribute("task") Task task, BindingResult result, Model model, Principal principal) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("task", task);
+            return "add-todo";
+        }
+        else {
+            model.addAttribute("message", "New Task Created!");
+            task.setUsername(principal.getName());
+            taskRepository.save(task);
+        }
+        return "list-todos";
     }
 }
 
