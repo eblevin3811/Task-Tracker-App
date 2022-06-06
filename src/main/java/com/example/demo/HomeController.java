@@ -75,17 +75,18 @@ public class HomeController {
             model.addAttribute("user", user);//was inside the if with teachers
             user.clearPassword();
             return "register";
-        } else {
-        model.addAttribute("message", "User Account Created!");
-        user.setEnabled(true);
-        userRepository.save(user);
-        Role role = new Role(user.getUsername(), "ROLE_USER");
+        }
+        else {
+            model.addAttribute("message", "User Account Created!");
+            user.setEnabled(true);
+            userRepository.save(user);
+            Role role = new Role(user.getUsername(), "ROLE_USER");
 
-       // Set<Role> roles = new HashSet<Role>();
-      //  roles.add(role);
-        roleRepository.save(role);
-    }
-return "index";
+            // Set<Role> roles = new HashSet<Role>();
+            // roles.add(role);
+            roleRepository.save(role);
+        }
+        return "index";
     }
 
     @RequestMapping("/list-todos")
@@ -116,11 +117,12 @@ return "index";
             return "add-todo";
         }
         else {
-            model.addAttribute("message", "New Task Created!");
+            //model.addAttribute("message", "New Task Created!");
             task.setUsername(principal.getName());
             taskRepository.save(task);
+            return "index";
         }
-        return "list-todos";
+
     }
 }
 

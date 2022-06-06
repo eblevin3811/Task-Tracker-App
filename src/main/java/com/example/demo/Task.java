@@ -1,9 +1,9 @@
 package com.example.demo;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Entity
 @Table(name="task_db")
@@ -26,22 +26,21 @@ public class Task {
 
     //Date format in java is YYYY-MM-DD and string can be converted to this
     @Column (name = "deadline", nullable = false, length = 45)
-    @NotEmpty
-    private String deadline;
+    private Date deadline;
 
     @Column (name = "completionStatus", nullable = false, length = 45)
     private boolean completionStatus;
     
     public Task(){
         //Ben added this
-        id = 0;
+        //id = 0;
         name = "";
         username = "";
         description = "";
-        deadline = "";
+        //deadline = new Date(0000, 00, 00);
     }
 
-    public Task(String name, String description, String username, String deadline, boolean completionStatus){
+    public Task(String name, String description, String username, Date deadline, boolean completionStatus){
         this.name = name;
         this.description = description;
         this.deadline = deadline;
@@ -61,7 +60,7 @@ public class Task {
         this.description = description;
     }
 
-    public void setDeadline(String deadline){
+    public void setDeadline(Date deadline){
         this.deadline = deadline;
     }
 
@@ -86,11 +85,7 @@ public class Task {
     }
 
     public Date getDeadline(){
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(deadline);
-        } catch (ParseException e) {
-            return new Date("0000-00-00");
-        }
+       return deadline;
     }
 
     public boolean getCompletionStatus(){

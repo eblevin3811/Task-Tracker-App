@@ -29,7 +29,7 @@
                     <tr th:each = "todo, todoStat: ${taskList}">
                         <td th:text="${todoStat.count}"></td>
                         <td th:text="${todo.description}"></td>
-                        <td th:text="${#dates.format(todo.deadline, 'dd.MM/yyyy')}"></td>
+                        <td th:text="${#dates.format(todo.deadline, 'yyyy-MM-dd')}"></td>
                         <td th:text="${todo.completionStatus}"></td>
                         <td>
                             <input type="checkbox" data-toggle="toggle" th:checked="${todo.completionStatus}"/>
