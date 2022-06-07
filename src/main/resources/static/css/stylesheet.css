@@ -1,15 +1,24 @@
 body {
   text-align: center;
-  background-color: #ADD8E6;
+  background-color: #F8F0FB;
+}
+
+h1 {
+color: #A8C4A8;
+font-family: arial, sans-serif;
+font-size: 50px;
+font-weight: bold;
+margin-top: 0px;
+margin-bottom: 1px;
 }
 
 form {
   display: inline-block;
-  border: 15px solid #f1f1f1;
-  border-width: 10px;
-  border-radius: 18px;
+  border: 15px solid #A8C4A8;
+  border-width: 2px;
+  border-radius: 10px;
   width: 280px;
-  background-color: #F0F8FF;
+  background-color: #F8F0FB;
 }
 
 input, form {
@@ -18,25 +27,25 @@ input, form {
 }
 
 #username-field {
-    border-radius: 18px;
-    border: 2px solid #609;
+    border-radius: 10px;
+    border: 2px solid #A8C4A8;
     padding: 8px;
     width: 120px;
-    height: 10px;      
+    height: 10px;
 }
 
 #password-field {
-    border-radius: 18px;
-    border: 2px solid #609;
+    border-radius: 10px;
+    border: 2px solid #A8C4A8;
     padding: 8px;
     width: 120px;
-    height: 10px;      
+    height: 10px;
 }
 
 input[type=submit] {
   padding:5px 15px;
-  background:##016ABC;
+  background: #CAD5CA;
   border:0 none;
-  border-radius: 20px;
+  border-radius: 5px;
   text-shadow: none;
 }
