@@ -3,11 +3,9 @@ package com.example.demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -89,6 +87,27 @@ public class HomeController {
         return "index";
     }
 
+    @RequestMapping(value = "/complete-todo", method = RequestMethod.GET)
+    public String updateTodoList(@RequestParam long id, ModelMap model, Principal principal){
+        //Get the ID of the task
+        Task task = taskRepository.findById(id);
+
+        //Update completion status
+        task.setCompletionStatus(true);
+        taskRepository.save(task);
+
+        //Get user identifier
+        String username = principal.getName();
+
+        //Get list of all tasks associated with user
+        Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+        //Add tasks to list-todos list
+        model.addAttribute(taskList);
+
+        return "list-todos";
+    }
+
     @RequestMapping("/list-todos")
     public String listTodos(Principal principal, Model model){
         //Get user identifier
@@ -120,7 +139,17 @@ public class HomeController {
             //model.addAttribute("message", "New Task Created!");
             task.setUsername(principal.getName());
             taskRepository.save(task);
-            return "index";
+
+            //Get user identifier
+            String username = principal.getName();
+
+            //Get list of all tasks associated with user
+            Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+            //Add tasks to list-todos list
+            model.addAttribute(taskList);
+
+            return "list-todos";
         }
 
     }
