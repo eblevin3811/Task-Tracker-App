@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -108,8 +109,71 @@ public class HomeController {
         return "list-todos";
     }
 
+    @RequestMapping(value = "/delete-todo", method = RequestMethod.GET)
+    public String deleteFromTodoList(@Valid @ModelAttribute("task") Task task, ModelMap model, Principal principal){
+
+        //Delete task from repo
+        //taskRepository.deleteById(id);
+
+        //Get list of all tasks with task id
+        String username = principal.getName();
+
+        //Get list of all tasks associated with user
+        Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+        //Add tasks to list-todos list
+        model.addAttribute(taskList);
+
+        return "list-todos";
+    }
+
+    @RequestMapping(value = "/edit-todo")
+    public String editTodo(@RequestParam long id, Principal principal, Model model) throws NotFoundException{
+
+        //Find todo
+        Task task = taskRepository.findById(id);
+
+        if (task == null){
+            throw new NotFoundException("Task ID " + id + " not found.");
+        }
+
+        //Add todo to model
+        model.addAttribute("task", task);
+
+        return "edit-todo";
+    }
+
+    @PostMapping(value = "/edit-todo")
+    public String postEditedTodo(@Valid @ModelAttribute("task") Task task, BindingResult result, Model model, Principal principal) throws NotFoundException {
+
+        //Task task = taskRepository.findById(id);
+
+        //Check for errors in user form
+        if (result.hasErrors()) {
+            model.addAttribute("task", task);
+            return "edit-todo";
+        }
+
+        //Save changes to repository
+        else {
+            taskRepository.save(task);
+
+            //Get user identifier
+            String username = principal.getName();
+
+            //Get list of all tasks associated with user
+            Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+            //Add tasks to list-todos list
+            model.addAttribute(taskList);
+
+            return "redirect:list-todos";
+        }
+    }
+
     @RequestMapping("/list-todos")
     public String listTodos(Principal principal, Model model){
+
         //Get user identifier
         String username = principal.getName();
 
@@ -136,7 +200,6 @@ public class HomeController {
             return "add-todo";
         }
         else {
-            //model.addAttribute("message", "New Task Created!");
             task.setUsername(principal.getName());
             taskRepository.save(task);
 

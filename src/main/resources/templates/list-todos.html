@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Your Tasks</title>
     <base href="/">
     <link href="static/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -35,12 +35,13 @@
                             <td th:text="${#dates.format(todo.deadline, 'yyyy-MM-dd')}"></td>
 
                             <td th:switch="${todo.completionStatus}">
-                                <span th:case="true" th:text="Complete"></span>
-                                <span th:case="false" th:text="Incomplete"></span>
+                                <span th:case="true" th:text="Complete" style="color:green"></span>
+                                <span th:case="false" th:text="Incomplete" style="color:red"></span>
                             </td>
                             <td>
                                 <a type="button" th:href="@{'/complete-todo?id=' + ${todo.id}}">Complete</a>
                                 <a type="button" th:href="@{'/delete-todo?id=' + ${todo.id}}">Delete</a>
+                                <a type="button" th:href="@{'/edit-todo?id=' + ${todo.id}}">Edit</a>
                             </td>
                         </tr>
                     </tbody>
