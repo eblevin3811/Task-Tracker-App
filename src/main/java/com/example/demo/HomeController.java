@@ -69,23 +69,23 @@ public class HomeController {
     }
     @PostMapping("/register")
     public String processRegisterationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
+        model.addAttribute("user", user);//was inside the if with teachers
 
         if (result.hasErrors()) {
-            model.addAttribute("user", user);//was inside the if with teachers
             user.clearPassword();
             return "register";
         }
         else {
             model.addAttribute("message", "User Account Created!");
             user.setEnabled(true);
-            userRepository.save(user);
-            Role role = new Role(user.getUsername(), "ROLE_USER");
 
-            // Set<Role> roles = new HashSet<Role>();
-            // roles.add(role);
+            Role role = new Role(user.getUsername(), "ROLE_USER");
+             Set<Role> roles = new HashSet<Role>();
+             roles.add(role);
             roleRepository.save(role);
+            userRepository.save(user);
         }
-        return "index";
+        return "login";
     }
 
     @RequestMapping(value = "/complete-todo", method = RequestMethod.GET)

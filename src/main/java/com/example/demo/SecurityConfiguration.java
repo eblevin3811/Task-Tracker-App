@@ -34,8 +34,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/js/**", "/css/**","/register","/login",
                         "/styles/**", "/img/**", "/index", "/").permitAll()
                     .antMatchers("/admin").hasRole("ADMIN")
-                    .antMatchers("/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/register/**").permitAll()
+                    .antMatchers("/add-todo","/edit-todo","list-todos").hasAnyRole("ADMIN", "USER")
+//                .antMatchers("/register").permitAll()
                 .and()
             .formLogin()
                 .loginPage("/login").permitAll()
@@ -45,6 +45,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .invalidateHttpSession(true)
 //                .clearAuthentication(true)
                 .logoutSuccessUrl("/login?logout=true").permitAll();
+
+//            httpSecurity.authorizeRequests().antMatchers("/add-todo","/edit-todo","list-todos").authenticated().and().formLogin();
 
         httpSecurity.csrf().disable();
         //httpSecurity.csrf().ignoringAntMatchers("/jdbc:mysql://admin@tododb.cluster-ck5cshs9f6iu.us-east-1.rds.amazonaws.com:3306/tododb/**");
