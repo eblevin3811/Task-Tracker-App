@@ -14,15 +14,21 @@
             <table>
                 <tr>
                     <th scope="row"><label>Task Name:</label></th>
-                    <td><input type = "text" th:field="*{name}" placeholder="ex: Wash car"></td>
+                    <td><input type = "text" th:field="*{name}" placeholder="ex: Wash car" id="name">
+                        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red">Invalid task name </span>
+                    </td>
                 </tr>
                 <tr>
                     <th scope = "row"><label>Task Description:</label></th>
-                    <td><input type = "text" th:field="*{description}" placeholder = "ex: Take car to Bob's Car Wash"></td>
+                    <td><input type = "text" th:field="*{description}" placeholder = "ex: Take car to Bob's Car Wash" id="description">
+                        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" style="color:red">Invalid description</span>
+                    </td>
                 </tr>
                 <tr>
                     <th scope = "row"><label>Deadline:</label></th>
-                    <td><input type = "text" th:field="*{deadline}" placeholder="yyyy-MM-DD"></td>
+                    <td><input type = "text" th:field="*{deadline}" placeholder="ex: yyyy-MM-dd" id="deadline">
+                        <span th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}" style="color:red">Invalid deadline</span>
+                    </td>
                 </tr>
             </table>
             <input type = "submit" value = "Add to task list">

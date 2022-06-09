@@ -1,13 +1,12 @@
 package com.example.demo;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -75,21 +74,106 @@ public class HomeController {
             model.addAttribute("user", user);//was inside the if with teachers
             user.clearPassword();
             return "register";
-        } else {
-        model.addAttribute("message", "User Account Created!");
-        user.setEnabled(true);
-        userRepository.save(user);
-        Role role = new Role(user.getUsername(), "ROLE_USER");
+        }
+        else {
+            model.addAttribute("message", "User Account Created!");
+            user.setEnabled(true);
+            userRepository.save(user);
+            Role role = new Role(user.getUsername(), "ROLE_USER");
 
-       // Set<Role> roles = new HashSet<Role>();
-      //  roles.add(role);
-        roleRepository.save(role);
+            // Set<Role> roles = new HashSet<Role>();
+            // roles.add(role);
+            roleRepository.save(role);
+        }
+        return "index";
     }
-return "index";
+
+    @RequestMapping(value = "/complete-todo", method = RequestMethod.GET)
+    public String updateTodoList(@RequestParam long id, ModelMap model, Principal principal){
+        //Get the ID of the task
+        Task task = taskRepository.findById(id);
+
+        //Update completion status
+        task.setCompletionStatus(true);
+        taskRepository.save(task);
+
+        //Get user identifier
+        String username = principal.getName();
+
+        //Get list of all tasks associated with user
+        Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+        //Add tasks to list-todos list
+        model.addAttribute(taskList);
+
+        return "list-todos";
+    }
+
+    @RequestMapping(value = "/delete-todo", method = RequestMethod.GET)
+    public String deleteFromTodoList(@Valid @ModelAttribute("task") Task task, ModelMap model, Principal principal){
+
+        //Delete task from repo
+        //taskRepository.deleteById(id);
+
+        //Get list of all tasks with task id
+        String username = principal.getName();
+
+        //Get list of all tasks associated with user
+        Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+        //Add tasks to list-todos list
+        model.addAttribute(taskList);
+
+        return "list-todos";
+    }
+
+    @RequestMapping(value = "/edit-todo")
+    public String editTodo(@RequestParam long id, Principal principal, Model model) throws NotFoundException{
+
+        //Find todo
+        Task task = taskRepository.findById(id);
+
+        if (task == null){
+            throw new NotFoundException("Task ID " + id + " not found.");
+        }
+
+        //Add todo to model
+        model.addAttribute("task", task);
+
+        return "edit-todo";
+    }
+
+    @PostMapping(value = "/edit-todo")
+    public String postEditedTodo(@Valid @ModelAttribute("task") Task task, BindingResult result, Model model, Principal principal) throws NotFoundException {
+
+        //Task task = taskRepository.findById(id);
+
+        //Check for errors in user form
+        if (result.hasErrors()) {
+            model.addAttribute("task", task);
+            return "edit-todo";
+        }
+
+        //Save changes to repository
+        else {
+            taskRepository.save(task);
+
+            //Get user identifier
+            String username = principal.getName();
+
+            //Get list of all tasks associated with user
+            Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+            //Add tasks to list-todos list
+            model.addAttribute(taskList);
+
+            return "redirect:list-todos";
+        }
     }
 
     @RequestMapping("/list-todos")
     public String listTodos(Principal principal, Model model){
+
         //Get user identifier
         String username = principal.getName();
 
@@ -116,11 +200,21 @@ return "index";
             return "add-todo";
         }
         else {
-            model.addAttribute("message", "New Task Created!");
             task.setUsername(principal.getName());
             taskRepository.save(task);
+
+            //Get user identifier
+            String username = principal.getName();
+
+            //Get list of all tasks associated with user
+            Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+            //Add tasks to list-todos list
+            model.addAttribute(taskList);
+
+            return "list-todos";
         }
-        return "list-todos";
+
     }
 }
 

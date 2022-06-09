@@ -28,7 +28,7 @@ public class TaskRepositoryTests {
         task.setName("Test Task");
         task.setDescription("Task designed for testing!");
         task.setUsername("testUser");
-        task.setDeadline("2023-01-04");
+        task.setDeadline((java.sql.Date) new Date(2023, 01, 04));
         task.setCompletionStatus(false);
 
         Task savedTask = repository.save(task);
