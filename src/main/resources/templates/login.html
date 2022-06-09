@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/stylesheet.css"/>
+    <title>Login</title>
+    <base href="/">
+    <link href="static/css/stylesheet.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 
@@ -15,7 +16,7 @@
         th:if="${param.logout}">You have been logged out
 </div>
 
-<form th:action="@{/login}" method="post">
+<form th:action="@{/login}" method="post"/>
     <div>
         <label>Username: <input type="text" name="username" ></label>
     </div>
@@ -24,8 +25,9 @@
         <label>Password: <input type="text" name="password" ></label>
     </div>
 
-    <input type="submit" value="Login">
+    <input type="submit" value="Login"> <button th:href="@{/register}">Register</button>
 </form>
+
 
 
 </body>

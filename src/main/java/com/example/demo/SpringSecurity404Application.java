@@ -16,17 +16,17 @@ public class SpringSecurity404Application {
 	@Bean
 	public CommandLineRunner run(UserRepository userRepository, RoleRepository roleRepository) throws Exception {
 		return (String[] args) -> {
-			User user = new User("bart", "bart@domain.com", "bart", "Bart", "Simpson", true);
-			Role userRole = new Role("bart", "ROLE_USER");
-			userRepository.save(user);
-			roleRepository.save(userRole);
-			User admin = new User("super", "super@domain.com", "super", "Super", "Man", true);
-			Role adminRole = new Role("super", "ROLE_ADMIN");
+			//User user = new User("bart", "bart@domain.com", "bart", "Bart", "Simpson", true, 101);
+			//Role userRole = new Role("bart", "ROLE_USER");
+			//userRepository.save(user);
+			//roleRepository.save(userRole);
+			//User admin = new User("super", "super@domain.com", "super", "Super", "Man", true, 101);
+			//Role adminRole = new Role("super", "ROLE_ADMIN");
 			//How to dispaly twp roles of the same user added on for 405
-			Role adminRole2 = new Role("super", "ROLE_USER");
-			userRepository.save(admin);
-			roleRepository.save(adminRole);
-			roleRepository.save(adminRole2);
+			//Role adminRole2 = new Role("super", "ROLE_USER");
+			//userRepository.save(admin);
+			//roleRepository.save(adminRole);
+			//roleRepository.save(adminRole2);
 		};
 	}
 

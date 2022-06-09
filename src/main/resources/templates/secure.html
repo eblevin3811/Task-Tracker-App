@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="../static/css/stylesheet.css"/>
+    <title>Secure Page</title>
+    <base href="/">
+    <link href="static/css/stylesheet.css" rel="stylesheet"/>
 </head>
 <body>
-<!--Passed infro: the whole class os User(username,email,pass,first{+last_name, enalbed)-->
+<!--Passed info: the whole class os User(username,email,pass,first{+last_name, enabled)-->
 <h2>Secured Page</h2>
+
 <h4>User Name:</h4>
-<p>[[${user.lastName}]], [[${user.firstName}]]</p>
-<p>Email: [[${user.email}]]</p>
-<p>userName: [[${user.username}]]</p>
+<div>
+    <p>[[${user.lastName}]], [[${user.firstName}]]</p>
+    <p>Email: [[${user.email}]]</p>
+    <p>userName: [[${user.username}]]</p>
+</div>
+
 <p>Roles: </p>
 <div th:each="role: ${roles}">
-<p>Role: [[${role.role}]]</p>
+    <p>Role: [[${role.role}]]</p>
 </div>
 
 </body>

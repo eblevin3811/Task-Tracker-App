@@ -1,36 +1,54 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 
 @Configuration
-public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    /*@Override
+    public void configure(WebSecurity web) throws Exception{
+        web
+                .ignoring()
+                .antMatchers("/resources/**", "/css/**").anyRequest();
+    }*/
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-            .authorizeRequests()
-                .antMatchers("/admin").hasRole("ADMIN")
-                .antMatchers("/register").hasRole("ADMIN")
-                .antMatchers("/**").hasAnyRole("ADMIN", "USER")
+                .authorizeRequests()
+                    .antMatchers("/admin/**", "/register").hasRole("ADMIN")
+                    .antMatchers("/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/register/**").permitAll()
                 .and()
             .formLogin()
-            .loginPage("/login").permitAll()
-            .and()
+                .loginPage("/login").permitAll()
+                .defaultSuccessUrl("/", true)
+                .and()
             .logout()
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
                 .logoutSuccessUrl("/login?logout=true").permitAll();
 
-        httpSecurity.csrf().ignoringAntMatchers("/h2-console/**");
-    httpSecurity.headers().frameOptions().sameOrigin();
+        httpSecurity.csrf().disable();
+        //httpSecurity.csrf().ignoringAntMatchers("/jdbc:mysql://admin@tododb.cluster-ck5cshs9f6iu.us-east-1.rds.amazonaws.com:3306/tododb/**");
+        httpSecurity.headers().frameOptions().sameOrigin();
     }
+
     @Autowired
     private DataSource dataSource;
 
@@ -42,9 +60,8 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
                         + "users_db where username=?")
                 .authoritiesByUsernameQuery("select username, role from roles "
                         + "where username=?");
-
-
 }
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
