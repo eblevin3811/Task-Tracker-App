@@ -31,17 +31,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeRequests()
-                    .antMatchers("/admin/**", "/register").hasRole("ADMIN")
+                .antMatchers("/js/**", "/css/**","/register","/login",
+                        "/styles/**", "/img/**", "/index", "/").permitAll()
+                    .antMatchers("/admin").hasRole("ADMIN")
                     .antMatchers("/**").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/register/**").permitAll()
                 .and()
             .formLogin()
                 .loginPage("/login").permitAll()
-                .defaultSuccessUrl("/", true)
+//                .defaultSuccessUrl("/", true)
                 .and()
             .logout()
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
+//                .invalidateHttpSession(true)
+//                .clearAuthentication(true)
                 .logoutSuccessUrl("/login?logout=true").permitAll();
 
         httpSecurity.csrf().disable();

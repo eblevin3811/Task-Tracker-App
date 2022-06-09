@@ -1,29 +1,29 @@
 body {
-  text-align: center;
-  background-color: #F8F0FB;
+    text-align: center;
+    background-color: #F8F0FB;
 }
 
 h1 {
-color: #A8C4A8;
-font-family: arial, sans-serif;
-font-size: 50px;
-font-weight: bold;
-margin-top: 0px;
-margin-bottom: 1px;
+    color: #A8C4A8;
+    font-family: arial, sans-serif;
+    font-size: 50px;
+    font-weight: bold;
+    margin-top: 0px;
+    margin-bottom: 1px;
 }
 
 form {
-  display: inline-block;
-  border: 15px solid #A8C4A8;
-  border-width: 2px;
-  border-radius: 10px;
-  width: 280px;
-  background-color: #F8F0FB;
+    display: inline-block;
+    border: 15px solid #A8C4A8;
+    border-width: 2px;
+    border-radius: 10px;
+    width: 280px;
+    background-color: #F8F0FB;
 }
 
 input, form {
-   margin-top: 5px;
-   margin-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 #username-field {
@@ -43,9 +43,9 @@ input, form {
 }
 
 input[type=submit] {
-  padding:5px 15px;
-  background: #CAD5CA;
-  border:0 none;
-  border-radius: 5px;
-  text-shadow: none;
+    padding:5px 15px;
+    background: #CAD5CA;
+    border:0 none;
+    border-radius: 5px;
+    text-shadow: none;
 }
