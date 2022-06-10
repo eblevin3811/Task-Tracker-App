@@ -37,5 +37,25 @@ public class UserRepositoryTests {
         User existUser = entityManager.find(User.class, savedUser.getId());
 
         assertThat(user.getEmail()).isEqualTo(existUser.getEmail());
+
+        repository.delete(user);
+    }
+
+    @Test
+    public void testFindByUsername(){
+        User user = new User();
+        user.setEmail("testuser2@gmail.com");
+        user.setPassword("pass");
+        user.setFirstName("First");
+        user.setLastName("Last");
+        user.setUsername("testUser");
+        user.setEnabled(true);
+        user.setGroupId(0);
+
+        repository.save(user);
+
+        assertThat(repository.findByUsername("testUser") == user);
+
+        repository.delete(user);
     }
 }

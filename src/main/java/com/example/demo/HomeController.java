@@ -110,10 +110,10 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/delete-todo", method = RequestMethod.GET)
-    public String deleteFromTodoList(@Valid @ModelAttribute("task") Task task, ModelMap model, Principal principal){
+    public String deleteFromTodoList(@RequestParam long id, ModelMap model, Principal principal){
 
         //Delete task from repo
-        //taskRepository.deleteById(id);
+        taskRepository.deleteById(id);
 
         //Get list of all tasks with task id
         String username = principal.getName();

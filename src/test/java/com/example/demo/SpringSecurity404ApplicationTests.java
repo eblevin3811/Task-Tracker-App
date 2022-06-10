@@ -8,6 +8,7 @@ class SpringSecurity404ApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }

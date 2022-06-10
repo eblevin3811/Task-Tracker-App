@@ -5,7 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.security.test.context.annotation.SecurityTestExecutionListeners;
 import org.springframework.test.annotation.Rollback;
+
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,5 +34,27 @@ public class RoleRepositoryTests {
         Role existRole = entityManager.find(Role.class, savedRole.getId());
 
         assertThat(role.getRole()).isEqualTo(existRole.getRole());
+
+        repository.delete(role);
+    }
+
+    @Test
+    public void testFindAllByUsername(){
+        Role role1 = new Role();
+        role1.setRole("Test Role 1");
+        role1.setUsername("testUser");
+        repository.save(role1);
+
+        Role role2 = new Role();
+        role2.setRole("Test Role 2");
+        role2.setUsername("testUser");
+        repository.save(role2);
+
+        Set<Role> roleSet = repository.findAllByUsername("testUser");
+
+        assertThat(roleSet.size() == 2);
+
+        repository.delete(role1);
+        repository.delete(role2);
     }
 }
