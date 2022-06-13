@@ -173,17 +173,22 @@ public class HomeController {
 
     @RequestMapping("/list-todos")
     public String listTodos(Principal principal, Model model){
+        String htmlPg = "";
 
-        //Get user identifier
-        String username = principal.getName();
-
-        //Get list of all tasks associated with user
-        Set<Task> taskList = taskRepository.findAllByUsername(username);
-
-        //Add tasks to list-todos list
-        model.addAttribute(taskList);
-
-        return "list-todos";
+        //try to see if user logged in
+        try {
+            //Get user identifier
+            String username = principal.getName();
+            //Get list of all tasks associated with user
+            Set<Task> taskList = taskRepository.findAllByUsername(username);
+            //Add tasks to list-todos list
+            model.addAttribute(taskList);
+            htmlPg = "list-todos";
+        }catch (NullPointerException exception){
+            //if not logged in
+            htmlPg = "login";
+        }
+        return htmlPg;
     }
 
     @RequestMapping("/add-todo")
