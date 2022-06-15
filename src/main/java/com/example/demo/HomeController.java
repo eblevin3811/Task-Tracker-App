@@ -10,12 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.Set;
-import java.util.logging.Logger;
+import java.util.Iterator;
 
 @Controller
 public class HomeController {
@@ -27,6 +24,12 @@ public class HomeController {
 
     @Autowired
     TaskRepository taskRepository;
+
+    @Autowired
+    FolderRepository folderRepository;
+
+    @Autowired
+    FolderTaskPairRepository folderTaskPairRepository;
 
     @RequestMapping("/")
     public String index() {
@@ -45,13 +48,13 @@ public class HomeController {
     public String admin() {
         return "admin"; }
 
-        @RequestMapping("/secure")
-        //Pricnple retains all the information for the current user
+    @RequestMapping("/secure")
+    //Principle retains all the information for the current user
     public String secure(Principal principal, Model model){
         String username = principal.getName();
         model.addAttribute("user", userRepository.findByUsername(username));
         //How to add the role into the model after matching it with user name
-       model.addAttribute("roles", roleRepository.findAllByUsername(username));
+        model.addAttribute("roles", roleRepository.findAllByUsername(username));
 
        /*Optional from instead of having to return a set from the Rolerepository
         Set<Role> roles = new HashSet<Role>();
@@ -59,8 +62,7 @@ public class HomeController {
           model.addAttribute("roles", roles);*/
         return "secure";
 
-        }
-
+    }
 
     @GetMapping("/register")
     public String showRegisterationPage(Model model) {
@@ -80,8 +82,8 @@ public class HomeController {
             user.setEnabled(true);
 
             Role role = new Role(user.getUsername(), "ROLE_USER");
-             Set<Role> roles = new HashSet<Role>();
-             roles.add(role);
+            Set<Role> roles = new HashSet<Role>();
+            roles.add(role);
             roleRepository.save(role);
             userRepository.save(user);
         }
@@ -103,17 +105,24 @@ public class HomeController {
         //Get list of all tasks associated with user
         Set<Task> taskList = taskRepository.findAllByUsername(username);
 
+        //Get list of all folders associated with user
+        Set<Folder> folderList = folderRepository.findAllByCreator(username);
+
         //Add tasks to list-todos list
         model.addAttribute(taskList);
+
+        //Add folders to list-todos list
+        model.addAttribute(folderList);
 
         return "list-todos";
     }
 
     @RequestMapping(value = "/delete-todo", method = RequestMethod.GET)
-    public String deleteFromTodoList(@Valid @ModelAttribute("task") Task task, ModelMap model, Principal principal){
+    public String deleteFromTodoList(@RequestParam long id, ModelMap model, Principal principal){
 
-        //Delete task from repo
-        //taskRepository.deleteById(id);
+        //Delete task from repos
+        taskRepository.deleteById(id);
+        folderTaskPairRepository.deleteAll(folderTaskPairRepository.findAllByTaskId(id));
 
         //Get list of all tasks with task id
         String username = principal.getName();
@@ -121,8 +130,14 @@ public class HomeController {
         //Get list of all tasks associated with user
         Set<Task> taskList = taskRepository.findAllByUsername(username);
 
+        //Get list of all folders associated with user
+        Set<Folder> folderList = folderRepository.findAllByCreator(username);
+
         //Add tasks to list-todos list
         model.addAttribute(taskList);
+
+        //Add folders to list-todos page
+        model.addAttribute(folderList);
 
         return "list-todos";
     }
@@ -164,8 +179,14 @@ public class HomeController {
             //Get list of all tasks associated with user
             Set<Task> taskList = taskRepository.findAllByUsername(username);
 
+            //Get list of all folders associated with user
+            Set<Folder> folderList = folderRepository.findAllByCreator(username);
+
             //Add tasks to list-todos list
             model.addAttribute(taskList);
+
+            //Add folders to list-todos page
+            model.addAttribute(folderList);
 
             return "redirect:list-todos";
         }
@@ -173,17 +194,28 @@ public class HomeController {
 
     @RequestMapping("/list-todos")
     public String listTodos(Principal principal, Model model){
+
         String htmlPg = "";
 
         //try to see if user logged in
         try {
             //Get user identifier
             String username = principal.getName();
+
             //Get list of all tasks associated with user
             Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+            //Get list of all folders associated with user
+            Set<Folder> folderList = folderRepository.findAllByCreator(username);
+
             //Add tasks to list-todos list
             model.addAttribute(taskList);
+
+            //Add folders to list-todos page
+            model.addAttribute(folderList);
+
             htmlPg = "list-todos";
+
         }catch (NullPointerException exception){
             //if not logged in
             htmlPg = "login";
@@ -214,14 +246,134 @@ public class HomeController {
             //Get list of all tasks associated with user
             Set<Task> taskList = taskRepository.findAllByUsername(username);
 
+            //Get list of all folders associated with user
+            Set<Folder> folderList = folderRepository.findAllByCreator(username);
+
             //Add tasks to list-todos list
             model.addAttribute(taskList);
+
+            //Add folders to list-todos page
+            model.addAttribute(folderList);
 
             return "list-todos";
         }
 
     }
+
+    @RequestMapping("/add-folder")
+    public String showAddFolderPage(Model model){
+        model.addAttribute("folder", new Folder());
+        return "add-folder";
+    }
+
+    @PostMapping("/add-folder")
+    public String processAddFolderPage(@Valid @ModelAttribute("folder") Folder folder, BindingResult result, Model model, Principal principal){
+        if (result.hasErrors()) {
+            model.addAttribute("folder", folder);
+            return "add-folder";
+        }
+        else {
+            folder.setCreator(principal.getName());
+            folderRepository.save(folder);
+
+            //Get user identifier
+            String username = principal.getName();
+
+            //Get list of all tasks associated with user
+            Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+            //Get list of all folders associated with user
+            Set<Folder> folderList = folderRepository.findAllByCreator(username);
+
+            //Add tasks to list-todos list
+            model.addAttribute(taskList);
+
+            //Add folders to list-todos page
+            model.addAttribute(folderList);
+
+            return "list-todos";
+        }
+    }
+
+    //When the user first enters the sort menu with only the task chosen
+    @RequestMapping(value = "/sort")
+    public String showSortOptions(@RequestParam("id") long taskId, Principal principal, Model model) throws NotFoundException{
+
+        //Find task from task ID
+        Task task = taskRepository.findById(taskId);
+
+        //Check if task exists
+        if (task == null){
+            throw new NotFoundException("Task ID " + taskId + " not found.");
+        }
+
+        //Get folders from user
+        Set<Folder> folders = folderRepository.findAllByCreator(principal.getName());
+
+        //Add task to model
+        model.addAttribute("task", task);
+
+        //Add folders to model
+        model.addAttribute("folderList", folders);
+
+        return "sort";
+    }
+
+    //When the user selects a folder to add the task to,
+    // it returns a task id and folder id to be linked in the DB
+    @RequestMapping(value = "/sort/assigned")
+    public String sortTodoIntoList(@RequestParam("folderId") long folderId, @RequestParam("taskId") long taskId, Principal principal, Model model) throws NotFoundException{
+
+        //Check if folder exists
+        Folder folder = folderRepository.findById(folderId);
+
+        if (folder == null){
+            throw new NotFoundException("Folder " + folderId + " not found!");
+        }
+
+        //Check if task exists
+        Task task = taskRepository.findById(taskId);
+
+        if (task == null){
+            throw new NotFoundException("Task " + taskId + " not found!");
+        }
+
+        //Create new FolderTaskPair
+        FolderTaskPair newPair = new FolderTaskPair(folderId, taskId);
+
+        //Add pair to repository
+        folderTaskPairRepository.save(newPair);
+
+        return listTodos(principal, model);
+    }
+
+    @RequestMapping("/view-folder")
+    public String viewTasksInFolder(@RequestParam("id") long folderId, Principal principal, Model model){
+
+        //Get folder
+        Folder currentFolder = folderRepository.findById(folderId);
+
+        //Get list of all tasks associated with folder
+        Set<FolderTaskPair> folderTaskPair = folderTaskPairRepository.findAllByFolderId(folderId);
+        if (folderTaskPair == null){
+            return "view-folder";
+        }
+
+        Set<Task> tasksInFolder = new HashSet<>();
+        Iterator<FolderTaskPair> iterator = folderTaskPair.iterator();
+
+        while (iterator.hasNext()){
+            Task taskInList = taskRepository.findById(iterator.next().getTaskId());
+            System.out.println(taskInList.getName());
+            tasksInFolder.add(taskInList);
+        }
+
+        //Add tasks to list-todos list
+        model.addAttribute("taskList", tasksInFolder);
+
+        //Add folders to list-todos page
+        model.addAttribute("folder", currentFolder);
+
+        return "view-folder";
+    }
 }
-
-
-
