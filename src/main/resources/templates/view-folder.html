@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Tasks</title>
+    <base href="/">
+    <link href="static/css/stylesheet.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div class="container">
+
+    <div th:if="${#lists.isEmpty(taskList)}">
+        This folder is empty.
+    </div>
+
+    <div th:unless="${#lists.isEmpty(taskList)}">
+        <table class="table table-striped" cellspacing="20">
+            <caption th:text="'Your current to-dos in ' + ${folder.folderName}"/>
+            <thead>
+            <tr>
+                <th>No.</th>
+                <th>Task</th>
+                <th>Description</th>
+                <th>Deadline</th>
+                <th>Completion Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each = "todo, todoStat: ${taskList}">
+                <td th:text="${todoStat.count}"></td>
+                <td th:text="${todo.name}"></td>
+                <td th:text="${todo.description}"></td>
+                <td th:text="${#dates.format(todo.deadline, 'yyyy-MM-dd')}"></td>
+
+                <td th:switch="${todo.completionStatus}">
+                    <span th:case="true" th:text="Complete" style="color:green"></span>
+                    <span th:case="false" th:text="Incomplete" style="color:red"></span>
+                </td>
+
+                <td>
+                    <a type="button" th:href="@{'/complete-todo?id=' + ${todo.id}}">Complete</a>
+                    <a type="button" th:href="@{'/delete-todo?id=' + ${todo.id}}">Delete</a>
+                    <a type="button" th:href="@{'/edit-todo?id=' + ${todo.id}}">Edit</a>
+                    <a type="button" th:href="@{'/sort?id=' + ${todo.id}}">Sort</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <br/>
+
+    <div>
+        <br>
+        <a type="button" th:href="@{/list-todos}">Back</a>
+    </div>
+
+</div>
+</body>
+</html>
