@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Your Tasks</title>
     <base href="/">
-    <link href="static/css/stylesheet.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 
 <body>
@@ -42,14 +42,23 @@
                                 <a type="button" th:href="@{'/complete-todo?id=' + ${todo.id}}">Complete</a>
                                 <a type="button" th:href="@{'/delete-todo?id=' + ${todo.id}}">Delete</a>
                                 <a type="button" th:href="@{'/edit-todo?id=' + ${todo.id}}">Edit</a>
+                                <a type="button" th:href="@{'/sort?id=' + ${todo.id}}">Sort</a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+
+                <a type="button" href="/add-todo">Create new task</a>
+                <a type="button" href="/add-folder">Create new folder</a>
+
+                <div class="container" th:unless="${#lists.isEmpty(folderList)}">
+                    Your task folders:
+                    <li th:each="folder: ${folderList}" style="list-style-type:none;">
+                        <a type="button" th:text="${folder.folderName}" th:href="@{'/view-folder?id=' + ${folder.id}}">Test</a>
+                    </li>
+                </div>
             </div>
         <br/>
-        <a type="button" href="/add-todo">Create new task</a>
     </div>
-
 </body>
 </html>

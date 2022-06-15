@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a new task</title>
+    <base href="/">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+
+<h2>Create New Folder</h2>
+<div class="container">
+    <form th:action="@{/add-folder}" th:object="${folder}" method="post">
+        <table>
+            <tr>
+                <th scope="row"><label>Folder Name:</label></th>
+                <td><input type = "text" th:field="*{folderName}" placeholder="ex: Homework" id="folderName">
+                    <span th:if="${#fields.hasErrors('folderName')}" th:errors="*{folderName}" style="color:red">Invalid folder name</span>
+                </td>
+            </tr>
+        </table>
+        <input type = "submit" value = "Create folder">
+    </form>
+</div>
+</body>
+</html>
