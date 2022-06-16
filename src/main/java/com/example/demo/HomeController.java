@@ -224,7 +224,12 @@ public class HomeController {
     }
 
     @RequestMapping("/add-todo")
-    public String showAddTodoPage(Model model) {
+    public String showAddTodoPage(Model model, Principal principal) {
+
+        if (principal == null){
+            return "login";
+        }
+
         model.addAttribute("task", new Task());
         return "add-todo";
     }
