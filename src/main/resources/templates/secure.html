@@ -5,8 +5,30 @@
     <title>Secure Page</title>
     <base href="/">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+        body{
+            font-size: medium;
+            background-color: ghostwhite;
+            alignment: center;
+        }
+        form{
+            background: ghostwhite;
+            padding: 40px;
+            max-width: 40%;
+            /*height: 500px;*/
+            margin: 40px auto;
+        }
+        table{
+            background: ghostwhite;
+        }
+
+        div{
+            background: ghostwhite;
+        }
+    </style>
 </head>
 <body>
+<div th:insert="components :: navbar"></div>
 <!--Passed info: the whole class os User(username,email,pass,first{+last_name, enabled)-->
 <h2>Secured Page</h2>
 

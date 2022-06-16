@@ -31,6 +31,9 @@ public class HomeController {
     @Autowired
     FolderTaskPairRepository folderTaskPairRepository;
 
+    @Autowired
+    UserTaskPairRepository userTaskPairRepository;
+
     @RequestMapping("/")
     public String index() {
         return "index"; }
@@ -101,9 +104,17 @@ public class HomeController {
 
         //Get user identifier
         String username = principal.getName();
+        User user = userRepository.findByUsername(username);
 
         //Get list of all tasks associated with user
-        Set<Task> taskList = taskRepository.findAllByUsername(username);
+        Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+        Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+        Set<Task> taskList = new HashSet<>();
+        while (iterator.hasNext()){
+            Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+            taskList.add(nextTask);
+        }
 
         //Get list of all folders associated with user
         Set<Folder> folderList = folderRepository.findAllByCreator(username);
@@ -123,12 +134,21 @@ public class HomeController {
         //Delete task from repos
         taskRepository.deleteById(id);
         folderTaskPairRepository.deleteAll(folderTaskPairRepository.findAllByTaskId(id));
+        userTaskPairRepository.deleteAll(userTaskPairRepository.findAllByTaskId(id));
 
-        //Get list of all tasks with task id
+        //Get user
         String username = principal.getName();
+        User user = userRepository.findByUsername(username);
 
         //Get list of all tasks associated with user
-        Set<Task> taskList = taskRepository.findAllByUsername(username);
+        Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+        Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+        Set<Task> taskList = new HashSet<>();
+        while (iterator.hasNext()){
+            Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+            taskList.add(nextTask);
+        }
 
         //Get list of all folders associated with user
         Set<Folder> folderList = folderRepository.findAllByCreator(username);
@@ -173,11 +193,19 @@ public class HomeController {
         else {
             taskRepository.save(task);
 
-            //Get user identifier
+            //Get user
             String username = principal.getName();
+            User user = userRepository.findByUsername(username);
 
             //Get list of all tasks associated with user
-            Set<Task> taskList = taskRepository.findAllByUsername(username);
+            Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+            Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+            Set<Task> taskList = new HashSet<>();
+            while (iterator.hasNext()){
+                Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+                taskList.add(nextTask);
+            }
 
             //Get list of all folders associated with user
             Set<Folder> folderList = folderRepository.findAllByCreator(username);
@@ -197,34 +225,46 @@ public class HomeController {
 
         String htmlPg = "";
 
-        //try to see if user logged in
-        try {
-            //Get user identifier
-            String username = principal.getName();
-
-            //Get list of all tasks associated with user
-            Set<Task> taskList = taskRepository.findAllByUsername(username);
-
-            //Get list of all folders associated with user
-            Set<Folder> folderList = folderRepository.findAllByCreator(username);
-
-            //Add tasks to list-todos list
-            model.addAttribute(taskList);
-
-            //Add folders to list-todos page
-            model.addAttribute(folderList);
-
-            htmlPg = "list-todos";
-
-        }catch (NullPointerException exception){
-            //if not logged in
-            htmlPg = "login";
+        if (principal == null){
+            return "login";
         }
-        return htmlPg;
+
+        //Get user identifier
+        String username = principal.getName();
+        User user = userRepository.findByUsername(username);
+
+        //Get list of all tasks associated with user
+        Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+        Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+        Set<Task> taskList = new HashSet<>();
+        while (iterator.hasNext()){
+            Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+            taskList.add(nextTask);
+        }
+
+        //Get list of all folders associated with user
+        Set<Folder> folderList = folderRepository.findAllByCreator(username);
+
+        //Add tasks to list-todos list
+        model.addAttribute(taskList);
+
+        //Add folders to list-todos page
+        model.addAttribute(folderList);
+
+        //Add group id to list-todos page
+        model.addAttribute("groupId", user.getGroupId());
+
+        return "list-todos";
     }
 
     @RequestMapping("/add-todo")
-    public String showAddTodoPage(Model model) {
+    public String showAddTodoPage(Model model, Principal principal) {
+
+        if (principal == null){
+            return "login";
+        }
+
         model.addAttribute("task", new Task());
         return "add-todo";
     }
@@ -242,9 +282,21 @@ public class HomeController {
 
             //Get user identifier
             String username = principal.getName();
+            User user = userRepository.findByUsername(username);
+
+            //Create userTaskPair and add to database
+            UserTaskPair newUserTaskPair = new UserTaskPair(user.getId(), task.getId());
+            userTaskPairRepository.save(newUserTaskPair);
 
             //Get list of all tasks associated with user
-            Set<Task> taskList = taskRepository.findAllByUsername(username);
+            Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+            Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+            Set<Task> taskList = new HashSet<>();
+            while (iterator.hasNext()){
+                Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+                taskList.add(nextTask);
+            }
 
             //Get list of all folders associated with user
             Set<Folder> folderList = folderRepository.findAllByCreator(username);
@@ -278,9 +330,17 @@ public class HomeController {
 
             //Get user identifier
             String username = principal.getName();
+            User user = userRepository.findByUsername(username);
 
             //Get list of all tasks associated with user
-            Set<Task> taskList = taskRepository.findAllByUsername(username);
+            Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+            Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+            Set<Task> taskList = new HashSet<>();
+            while (iterator.hasNext()){
+                Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+                taskList.add(nextTask);
+            }
 
             //Get list of all folders associated with user
             Set<Folder> folderList = folderRepository.findAllByCreator(username);
@@ -375,5 +435,46 @@ public class HomeController {
         model.addAttribute("folder", currentFolder);
 
         return "view-folder";
+    }
+
+    @RequestMapping("/assign/complete")
+    public String assignTaskToGroupMember(@RequestParam("id") long taskId, @RequestParam("username") String memberName, Principal principal, Model model){
+
+        //Get group member
+        User groupMember = userRepository.findByUsername(memberName);
+
+        //Assign task to group member
+        UserTaskPair newPair = new UserTaskPair(groupMember.getId(), taskId);
+        userTaskPairRepository.save(newPair);
+
+        //Add everything back to model
+        User user = userRepository.findByUsername(principal.getName());
+        Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
+
+        //Get task from url
+        Task currentTask = taskRepository.findById(taskId);
+
+        //Add group list to model
+        model.addAttribute("groupList", groupMembers);
+        model.addAttribute("todo", currentTask);
+
+        return "assign";
+    }
+
+    @RequestMapping("/assign")
+    public String showAssignmentList(@RequestParam("id") long taskId, Model model, Principal principal){
+
+        //Get group list from user
+        User user = userRepository.findByUsername(principal.getName());
+        Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
+
+        //Get task from url
+        Task currentTask = taskRepository.findById(taskId);
+
+        //Add group list to model
+        model.addAttribute("groupList", groupMembers);
+        model.addAttribute("todo", currentTask);
+
+        return "assign";
     }
 }
