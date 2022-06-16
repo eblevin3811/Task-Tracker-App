@@ -104,9 +104,17 @@ public class HomeController {
 
         //Get user identifier
         String username = principal.getName();
+        User user = userRepository.findByUsername(username);
 
         //Get list of all tasks associated with user
-        Set<Task> taskList = taskRepository.findAllByUsername(username);
+        Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+        Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+        Set<Task> taskList = new HashSet<>();
+        while (iterator.hasNext()){
+            Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+            taskList.add(nextTask);
+        }
 
         //Get list of all folders associated with user
         Set<Folder> folderList = folderRepository.findAllByCreator(username);
@@ -126,12 +134,21 @@ public class HomeController {
         //Delete task from repos
         taskRepository.deleteById(id);
         folderTaskPairRepository.deleteAll(folderTaskPairRepository.findAllByTaskId(id));
+        userTaskPairRepository.deleteAll(userTaskPairRepository.findAllByTaskId(id));
 
-        //Get list of all tasks with task id
+        //Get user
         String username = principal.getName();
+        User user = userRepository.findByUsername(username);
 
         //Get list of all tasks associated with user
-        Set<Task> taskList = taskRepository.findAllByUsername(username);
+        Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+        Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+        Set<Task> taskList = new HashSet<>();
+        while (iterator.hasNext()){
+            Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+            taskList.add(nextTask);
+        }
 
         //Get list of all folders associated with user
         Set<Folder> folderList = folderRepository.findAllByCreator(username);
@@ -176,11 +193,19 @@ public class HomeController {
         else {
             taskRepository.save(task);
 
-            //Get user identifier
+            //Get user
             String username = principal.getName();
+            User user = userRepository.findByUsername(username);
 
             //Get list of all tasks associated with user
-            Set<Task> taskList = taskRepository.findAllByUsername(username);
+            Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+            Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+            Set<Task> taskList = new HashSet<>();
+            while (iterator.hasNext()){
+                Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+                taskList.add(nextTask);
+            }
 
             //Get list of all folders associated with user
             Set<Folder> folderList = folderRepository.findAllByCreator(username);
@@ -206,12 +231,17 @@ public class HomeController {
 
         //Get user identifier
         String username = principal.getName();
-
-        //Get user
         User user = userRepository.findByUsername(username);
 
         //Get list of all tasks associated with user
-        Set<Task> taskList = taskRepository.findAllByUsername(username);
+        Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+        Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+        Set<Task> taskList = new HashSet<>();
+        while (iterator.hasNext()){
+            Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+            taskList.add(nextTask);
+        }
 
         //Get list of all folders associated with user
         Set<Folder> folderList = folderRepository.findAllByCreator(username);
@@ -259,7 +289,14 @@ public class HomeController {
             userTaskPairRepository.save(newUserTaskPair);
 
             //Get list of all tasks associated with user
-            Set<Task> taskList = taskRepository.findAllByUsername(username);
+            Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+            Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+            Set<Task> taskList = new HashSet<>();
+            while (iterator.hasNext()){
+                Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+                taskList.add(nextTask);
+            }
 
             //Get list of all folders associated with user
             Set<Folder> folderList = folderRepository.findAllByCreator(username);
@@ -293,9 +330,17 @@ public class HomeController {
 
             //Get user identifier
             String username = principal.getName();
+            User user = userRepository.findByUsername(username);
 
             //Get list of all tasks associated with user
-            Set<Task> taskList = taskRepository.findAllByUsername(username);
+            Set<UserTaskPair> allTasks = userTaskPairRepository.findAllByUserId(user.getId());
+            Iterator<UserTaskPair> iterator = allTasks.iterator();
+
+            Set<Task> taskList = new HashSet<>();
+            while (iterator.hasNext()){
+                Task nextTask = taskRepository.findById(iterator.next().getTaskId());
+                taskList.add(nextTask);
+            }
 
             //Get list of all folders associated with user
             Set<Folder> folderList = folderRepository.findAllByCreator(username);
