@@ -2,8 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Sort task</title>
-    <base href="/">
+    <title>Assign Task</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <style>
         body{
@@ -29,20 +28,27 @@
 </head>
 <body>
 <div th:insert="components :: navbar"></div>
-<h2>Sort Task</h2>
-<div class="container">
+    <div>
+        <table class="table table-striped" cellspacing="20">
+            <caption>Group members</caption>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
 
-        <div th:if="${#lists.isEmpty(folderList)}">
-            You haven't created any folders yet.
-            <br>
-            <a type="button" th:href="@{/list-todos}">Back</a>
-        </div>
+            <tbody>
+                <tr th:each = "member, groupList: ${groupList}">
+                    <td th:text="|${member.firstName} ${member.lastName}|"></td>
+                    <td>
+                        <a type="button" th:href="@{'/assign/complete?id=' + ${todo.id} + '&username=' + ${member.username}}">Assign</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-        <div th:unless="${#lists.isEmpty(folderList)}">
-            <li th:each="folder: ${folderList}" style="list-style-type:none;">
-                <a type="button" th:text="'Add to ' + ${folder.folderName}" th:href="@{'/sort/assigned?folderId=' + ${folder.id} + '&taskId=' + ${task.id}}">Add</a>
-            </li>
-        </div>
-</div>
+        <a type="button" th:href="@{/list-todos}">Return to Task List</a>
+    </div>
 </body>
 </html>

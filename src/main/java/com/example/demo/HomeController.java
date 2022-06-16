@@ -31,6 +31,9 @@ public class HomeController {
     @Autowired
     FolderTaskPairRepository folderTaskPairRepository;
 
+    @Autowired
+    UserTaskPairRepository userTaskPairRepository;
+
     @RequestMapping("/")
     public String index() {
         return "index"; }
@@ -197,30 +200,32 @@ public class HomeController {
 
         String htmlPg = "";
 
-        //try to see if user logged in
-        try {
-            //Get user identifier
-            String username = principal.getName();
-
-            //Get list of all tasks associated with user
-            Set<Task> taskList = taskRepository.findAllByUsername(username);
-
-            //Get list of all folders associated with user
-            Set<Folder> folderList = folderRepository.findAllByCreator(username);
-
-            //Add tasks to list-todos list
-            model.addAttribute(taskList);
-
-            //Add folders to list-todos page
-            model.addAttribute(folderList);
-
-            htmlPg = "list-todos";
-
-        }catch (NullPointerException exception){
-            //if not logged in
-            htmlPg = "login";
+        if (principal == null){
+            return "login";
         }
-        return htmlPg;
+
+        //Get user identifier
+        String username = principal.getName();
+
+        //Get user
+        User user = userRepository.findByUsername(username);
+
+        //Get list of all tasks associated with user
+        Set<Task> taskList = taskRepository.findAllByUsername(username);
+
+        //Get list of all folders associated with user
+        Set<Folder> folderList = folderRepository.findAllByCreator(username);
+
+        //Add tasks to list-todos list
+        model.addAttribute(taskList);
+
+        //Add folders to list-todos page
+        model.addAttribute(folderList);
+
+        //Add group id to list-todos page
+        model.addAttribute("groupId", user.getGroupId());
+
+        return "list-todos";
     }
 
     @RequestMapping("/add-todo")
@@ -247,6 +252,11 @@ public class HomeController {
 
             //Get user identifier
             String username = principal.getName();
+            User user = userRepository.findByUsername(username);
+
+            //Create userTaskPair and add to database
+            UserTaskPair newUserTaskPair = new UserTaskPair(user.getId(), task.getId());
+            userTaskPairRepository.save(newUserTaskPair);
 
             //Get list of all tasks associated with user
             Set<Task> taskList = taskRepository.findAllByUsername(username);
@@ -380,5 +390,46 @@ public class HomeController {
         model.addAttribute("folder", currentFolder);
 
         return "view-folder";
+    }
+
+    @RequestMapping("/assign/complete")
+    public String assignTaskToGroupMember(@RequestParam("id") long taskId, @RequestParam("username") String memberName, Principal principal, Model model){
+
+        //Get group member
+        User groupMember = userRepository.findByUsername(memberName);
+
+        //Assign task to group member
+        UserTaskPair newPair = new UserTaskPair(groupMember.getId(), taskId);
+        userTaskPairRepository.save(newPair);
+
+        //Add everything back to model
+        User user = userRepository.findByUsername(principal.getName());
+        Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
+
+        //Get task from url
+        Task currentTask = taskRepository.findById(taskId);
+
+        //Add group list to model
+        model.addAttribute("groupList", groupMembers);
+        model.addAttribute("todo", currentTask);
+
+        return "assign";
+    }
+
+    @RequestMapping("/assign")
+    public String showAssignmentList(@RequestParam("id") long taskId, Model model, Principal principal){
+
+        //Get group list from user
+        User user = userRepository.findByUsername(principal.getName());
+        Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
+
+        //Get task from url
+        Task currentTask = taskRepository.findById(taskId);
+
+        //Add group list to model
+        model.addAttribute("groupList", groupMembers);
+        model.addAttribute("todo", currentTask);
+
+        return "assign";
     }
 }

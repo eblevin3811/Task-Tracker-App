@@ -6,19 +6,27 @@
 
 </head>
 <style>
-    body{
-        font-family: Optima;
-        font-size: medium;
-        background-color: rgba(0, 167, 209, 0.99);
-        alignment: center;
-    }
-    form{
-        background: ghostwhite;
-        padding: 40px;
-        max-width: 40%;
-        /*height: 500px;*/
-        margin: 40px auto;
-    }
+    <style>
+        body{
+            font-size: medium;
+            background-color: ghostwhite;
+            alignment: center;
+        }
+        form{
+            background: ghostwhite;
+            padding: 40px;
+            max-width: 40%;
+            /*height: 500px;*/
+            margin: 40px auto;
+        }
+        table{
+            background: ghostwhite;
+        }
+
+        div{
+            background: ghostwhite;
+        }
+    </style>
 
 </style>
 <body>
@@ -33,17 +41,17 @@
 </div>
 
 <form th:action="@{/login}" method="post"/>
-<div>
-    <label>Username: <input type="text" name="username" ></label>
-</div>
+<div style="text-align:center"><h3>Login</h3></div>
+    <div>
+        <label>Username: <input type="text" name="username" ></label>
+    </div>
 
-<div>
-    <label>Password: <input type="text" name="password" ></label>
-</div>
+    <div>
+        <label>Password: <input type="text" name="password" ></label>
+    </div>
 
 <input type="submit" value="Login">
 </form>
-
 
 
 </body>
