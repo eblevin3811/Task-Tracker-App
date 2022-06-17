@@ -5,55 +5,38 @@
     <title>Add a new task</title>
     <base href="/">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <style>
-        body{
-            font-size: medium;
-            background-color: ghostwhite;
-            alignment: center;
-        }
-        form{
-            background: ghostwhite;
-            padding: 40px;
-            max-width: 40%;
-            /*height: 500px;*/
-            margin: 40px auto;
-        }
-        table{
-            background: ghostwhite;
-        }
-
-        div{
-            background: ghostwhite;
-        }
-    </style>
 </head>
 <body>
-<div th:insert="components :: navbar"></div>
-    <h2>Create New Task</h2>
+    <div th:insert="components :: navbar"></div>
     <div class="container">
+        <h2>Create New Task</h2>
+        <hr/>
         <form th:action="@{/add-todo}" th:object="${task}" method="post">
             <table>
                 <tr>
                     <th scope="row"><label>Task Name:</label></th>
                     <td><input type = "text" th:field="*{name}" placeholder="ex: Wash car" id="name">
-                        <span th:if="${#fields.hasErrors('name')}" style="color:red">Invalid task name </span>
+                        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red">Invalid task name </span>
                     </td>
                 </tr>
                 <tr>
                     <th scope = "row"><label>Task Description:</label></th>
                     <td><input type = "text" th:field="*{description}" placeholder = "ex: Take car to Bob's Car Wash" id="description">
-                        <span th:if="${#fields.hasErrors('description')}" style="color:red">Invalid description</span>
+                        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}" style="color:red">Invalid description</span>
                     </td>
                 </tr>
                 <tr>
                     <th scope = "row"><label>Deadline:</label></th>
-                    <td><input type = "date" th:field="*{deadline}" placeholder="ex: yyyy-MM-dd" id="deadline">
-                        <span th:if="${#fields.hasErrors('deadline')}" style="color:red">Invalid deadline</span>
+                    <td><input type = "text" th:field="*{deadline}" placeholder="ex: yyyy-MM-dd" id="deadline">
+                        <span th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}" style="color:red">Invalid deadline</span>
                     </td>
                 </tr>
             </table>
             <input type = "submit" value = "Add to task list">
         </form>
+        <hr/>
+        <!--Added Back to List Tasks feature-->
+        <a th:href="@{/list-todos}">Back to List Tasks</a>
     </div>
 </body>
 </html>
