@@ -3,20 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title>Your Tasks</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.12.1/datatables.min.css"/>
     <base href="/">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 
 <body>
+    <div th:insert="components :: navbar"></div>
     <div class="container">
+        <h2>List Tasks</h2>
+        <hr/>
+        <!--Added Create new Task & new folder button-->
+        <a th:href="@{/add-todo}" class="btn btn-primary mb-2">Create new task</a>
+        <a th:href="@{/add-folder}" class="btn btn-warning ml-1 mb-2">Create new folder</a>
 
         <div th:if="${#lists.isEmpty(taskList)}">
             No current to-dos.
         </div>
 
             <div th:unless="${#lists.isEmpty(taskList)}">
-                <table class="table table-striped" cellspacing="20">
-                    <caption>Your current to-dos:</caption>
+                <table class="table table-striped" id="list-no" cellspacing="20" >
                     <thead>
                         <tr>
                             <th>No.</th>
@@ -39,17 +45,23 @@
                                 <span th:case="false" th:text="Incomplete" style="color:red"></span>
                             </td>
                             <td>
-                                <a type="button" th:href="@{'/complete-todo?id=' + ${todo.id}}">Complete</a>
-                                <a type="button" th:href="@{'/delete-todo?id=' + ${todo.id}}">Delete</a>
-                                <a type="button" th:href="@{'/edit-todo?id=' + ${todo.id}}">Edit</a>
-                                <a type="button" th:href="@{'/sort?id=' + ${todo.id}}">Sort</a>
+                                <!--Button changes-->
+                                <a th:href="@{'/complete-todo?id=' + ${todo.id}}" class="btn btn-primary">Complete</a>
+                                <a th:href="@{'/delete-todo?id=' + ${todo.id}}" class="btn btn-danger ml-1">Delete</a>
+                                <a th:href="@{'/edit-todo?id=' + ${todo.id}}" class="btn btn-info ml-1">Edit</a>
+                                <a th:href="@{'/sort?id=' + ${todo.id}}" class="btn btn-secondary ml-1">Sort</a>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
-                <a type="button" href="/add-todo">Create new task</a>
-                <a type="button" href="/add-folder">Create new folder</a>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+                <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.12.1/datatables.min.js"></script>
+                <script>
+                    $(document).ready(function() {
+                    $("#list-no").DataTable();
+                    })
+                </script>
 
                 <div class="container" th:unless="${#lists.isEmpty(folderList)}">
                     Your task folders:
@@ -60,5 +72,6 @@
             </div>
         <br/>
     </div>
+
 </body>
 </html>

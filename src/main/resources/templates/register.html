@@ -4,31 +4,46 @@
     <div th:insert="components :: meta-links"></div>
     <title>Register</title>
 
-</head>
-<style>
-    body{
-        font-family: Optima;
-        font-size: medium;
-        background-color: rgba(0, 167, 209, 0.99);
-        alignment: center;
-    }
-    form{
-        background: ghostwhite;
-        padding: 40px;
-        max-width: 40%;
-        /*height: 500px;*/
-        margin: 40px auto;
-    }
+    <style>
+        body{
+            text-align: center;
+            font-family: Optima;
+            font-size: medium;
+            background-color: snow;
+            alignment: center;
+        }
 
-</style>
+        form{
+            background: ghostwhite;
+            display: inline-block;
+            border: 15px solid #f1f1f1;
+            border-width:5px;
+            border-radius: 18px;
+            width: 450px;
+            padding: 40px;
+            max-width: 40%;
+            /*height: 500px;*/
+            margin: 40px auto;
+        }
+
+
+        input[type=submit] {
+            padding:5px 15px;
+            background:##016ABC;
+            border:0 none;
+            border-radius: 20px;
+            text-shadow: none;
+        }
+    </style>
+</head>
 <body>
 <div th:insert="components :: navbar"></div>
 
-<h2> Registration </h2>
+<h2>Registration</h2>
 <!--user class user is passed & message + we must validate the inputs -->
 <form autocomplete="off"   th:action="@{/register}" th:object="${user}" th:method="post">
 
-    First Name: <input type="text" placeholder="First Name" th:field="*{firstName}" id="firstName"/>
+    First Name: <input type="text" name="firstName" placeholder="First Name" th:field="*{firstName}" id="firstName"/>
     <mark><strong>
         <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Invalid first name </span>
     </strong></mark>

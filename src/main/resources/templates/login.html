@@ -4,8 +4,52 @@
     <div th:insert="components :: meta-links"></div>
     <title>Login</title>
 
+    <style type="text/css">
+        body {
+            text-align: center;
+            background-color: snow;
+        }
+
+        form {
+            background: ghostwhite;
+            display: inline-block;
+            border: 15px solid #f1f1f1;
+            border-width:5px;
+            border-radius: 18px;
+            width: 280px;
+        }
+
+        input, form {
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        #username-field {
+            border-radius: 18px;
+            border: 2px solid #609;
+            padding: 8px;
+            width: 120px;
+            height: 10px;
+        }
+
+        #password-field {
+            border-radius: 18px;
+            border: 2px solid #609;
+            padding: 8px;
+            width: 120px;
+            height: 10px;
+        }
+
+        input[type=submit] {
+            padding:5px 15px;
+            background:##016ABC;
+            border:0 none;
+            border-radius: 20px;
+            text-shadow: none;
+        }
+    </style>
 </head>
-<style>
+<!--<style>
     body{
         font-family: Optima;
         font-size: medium;
@@ -19,8 +63,8 @@
         /*height: 500px;*/
         margin: 40px auto;
     }
+</style>-->
 
-</style>
 <body>
 <div th:insert="components :: navbar"></div>
 
@@ -31,19 +75,19 @@
 <div th:if="${param.logout}">
     You have been logged out
 </div>
-
+<h2>Login</h2>
+<hr/>
 <form th:action="@{/login}" method="post"/>
 <div>
-    <label>Username: <input type="text" name="username" ></label>
+    <label>Username: <input type="text" name="username"></label>
 </div>
 
 <div>
-    <label>Password: <input type="text" name="password" ></label>
+    <label>Password: <input type="text" name="password"></label>
 </div>
 
 <input type="submit" value="Login">
 </form>
-
 
 
 </body>

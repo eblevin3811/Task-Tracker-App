@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 <body>
-
-    <h2>Create New Task</h2>
+    <div th:insert="components :: navbar"></div>
     <div class="container">
+        <h2>Create New Task</h2>
+        <hr/>
         <form th:action="@{/add-todo}" th:object="${task}" method="post">
             <table>
                 <tr>
@@ -31,8 +32,13 @@
                     </td>
                 </tr>
             </table>
-            <input type = "submit" value = "Add to task list">
+            <!--Create new Task button-->
+            <button class="btn btn-primary" type="submit">Add to task list</button>
+            <!-- Old button <input type = "submit" value = "Add to task list">-->
         </form>
+        <hr/>
+        <!--Added Back to List Tasks feature-->
+        <a th:href="@{/list-todos}">Back to List Tasks</a>
     </div>
 </body>
 </html>
