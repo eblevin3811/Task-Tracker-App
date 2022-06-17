@@ -27,7 +27,7 @@
                 </tr>
                 <tr>
                     <th scope = "row"><label>Deadline:</label></th>
-                    <td><input type = "text" th:field="*{deadline}" placeholder="ex: yyyy-MM-dd" id="deadline">
+                    <td><input type = "date" th:field="*{deadline}" placeholder="ex: yyyy-MM-dd" id="deadline">
                         <span th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}" style="color:red">Invalid deadline</span>
                     </td>
                 </tr>
