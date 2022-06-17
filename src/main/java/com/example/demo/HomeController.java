@@ -434,6 +434,9 @@ public class HomeController {
         //Add folders to list-todos page
         model.addAttribute("folder", currentFolder);
 
+        User user = userRepository.findByUsername(principal.getName());
+        model.addAttribute("groupId", user.getGroupId());
+
         return "view-folder";
     }
 
@@ -467,6 +470,7 @@ public class HomeController {
         //Get group list from user
         User user = userRepository.findByUsername(principal.getName());
         Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
+        groupMembers.remove(user);
 
         //Get task from url
         Task currentTask = taskRepository.findById(taskId);

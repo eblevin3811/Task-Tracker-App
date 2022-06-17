@@ -37,9 +37,14 @@
             No current to-dos.
         </div>
 
+        <div>
+            <a type="button" href="/add-todo">Create new task</a>
+            <a type="button" href="/add-folder">Create new folder</a>
+        </div>
+
             <div th:unless="${#lists.isEmpty(taskList)}">
                 <table class="table table-striped" cellspacing="20">
-                    <caption>Your current to-dos:</caption>
+                    <caption>Your current to-dos</caption>
                     <thead>
                         <tr>
                             <th>No.</th>
@@ -73,9 +78,6 @@
                         </tr>
                     </tbody>
                 </table>
-
-                <a type="button" href="/add-todo">Create new task</a>
-                <a type="button" href="/add-folder">Create new folder</a>
 
                 <div class="container" th:unless="${#lists.isEmpty(folderList)}">
                     Your task folders:
