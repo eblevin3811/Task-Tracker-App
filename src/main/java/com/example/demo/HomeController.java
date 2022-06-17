@@ -76,7 +76,7 @@ public class HomeController {
     }
     @PostMapping("/register")
     public String processRegisterationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
-        model.addAttribute("user", user);//was inside the if with teachers
+        model.addAttribute("user", user);
 
         if (result.hasErrors()) {
             user.clearPassword();
@@ -182,8 +182,6 @@ public class HomeController {
 
     @PostMapping(value = "/edit-todo")
     public String postEditedTodo(@Valid @ModelAttribute("task") Task task, BindingResult result, Model model, Principal principal) throws NotFoundException {
-
-        //Task task = taskRepository.findById(id);
 
         //Check for errors in user form
         if (result.hasErrors()) {
@@ -426,7 +424,6 @@ public class HomeController {
 
         while (iterator.hasNext()){
             Task taskInList = taskRepository.findById(iterator.next().getTaskId());
-            System.out.println(taskInList.getName());
             tasksInFolder.add(taskInList);
         }
 
@@ -455,6 +452,7 @@ public class HomeController {
         //Add everything back to model
         User user = userRepository.findByUsername(principal.getName());
         Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
+        groupMembers.remove(user);
 
         //Get task from url
         Task currentTask = taskRepository.findById(taskId);
