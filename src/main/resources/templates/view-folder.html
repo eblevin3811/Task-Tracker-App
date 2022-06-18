@@ -66,6 +66,9 @@
                     <a type="button" th:href="@{'/delete-todo?id=' + ${todo.id}}">Delete</a>
                     <a type="button" th:href="@{'/edit-todo?id=' + ${todo.id}}">Edit</a>
                     <a type="button" th:href="@{'/sort?id=' + ${todo.id}}">Sort</a>
+                    <div th:unless="${groupId == 0}">
+                        <a type="button" th:href="@{'/assign?id=' + ${todo.id}}">Assign</a>
+                    </div>
                 </td>
             </tr>
             </tbody>

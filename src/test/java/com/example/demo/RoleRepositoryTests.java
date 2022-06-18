@@ -57,4 +57,17 @@ public class RoleRepositoryTests {
         repository.delete(role1);
         repository.delete(role2);
     }
+
+    @Test
+    public void findInstance(){
+        Role role = new Role();
+        role.setRole("Test Role");
+        role.setUsername("Testuser");
+
+        repository.save(role);
+
+        assertThat(repository.findById(role.getId()).equals(role));
+
+        repository.delete(role);
+    }
 }

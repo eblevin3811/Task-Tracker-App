@@ -3,6 +3,7 @@ package com.example.demo;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -55,6 +56,7 @@ public class HomeController {
     //Principle retains all the information for the current user
     public String secure(Principal principal, Model model){
         String username = principal.getName();
+
         model.addAttribute("user", userRepository.findByUsername(username));
         //How to add the role into the model after matching it with user name
         model.addAttribute("roles", roleRepository.findAllByUsername(username));
@@ -74,7 +76,7 @@ public class HomeController {
     }
     @PostMapping("/register")
     public String processRegisterationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
-        model.addAttribute("user", user);//was inside the if with teachers
+        model.addAttribute("user", user);
 
         if (result.hasErrors()) {
             user.clearPassword();
@@ -180,8 +182,6 @@ public class HomeController {
 
     @PostMapping(value = "/edit-todo")
     public String postEditedTodo(@Valid @ModelAttribute("task") Task task, BindingResult result, Model model, Principal principal) throws NotFoundException {
-
-        //Task task = taskRepository.findById(id);
 
         //Check for errors in user form
         if (result.hasErrors()) {
@@ -424,7 +424,6 @@ public class HomeController {
 
         while (iterator.hasNext()){
             Task taskInList = taskRepository.findById(iterator.next().getTaskId());
-            System.out.println(taskInList.getName());
             tasksInFolder.add(taskInList);
         }
 
@@ -433,6 +432,9 @@ public class HomeController {
 
         //Add folders to list-todos page
         model.addAttribute("folder", currentFolder);
+
+        User user = userRepository.findByUsername(principal.getName());
+        model.addAttribute("groupId", user.getGroupId());
 
         return "view-folder";
     }
@@ -450,6 +452,7 @@ public class HomeController {
         //Add everything back to model
         User user = userRepository.findByUsername(principal.getName());
         Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
+        groupMembers.remove(user);
 
         //Get task from url
         Task currentTask = taskRepository.findById(taskId);
@@ -467,6 +470,7 @@ public class HomeController {
         //Get group list from user
         User user = userRepository.findByUsername(principal.getName());
         Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
+        groupMembers.remove(user);
 
         //Get task from url
         Task currentTask = taskRepository.findById(taskId);
