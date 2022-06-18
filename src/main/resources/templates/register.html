@@ -3,29 +3,38 @@
 <head>
     <div th:insert="components :: meta-links"></div>
     <title>Register</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
     <style>
         body{
+            text-align: center;
             font-size: medium;
-            background-color: ghostwhite;
+            background-color: snow;
             alignment: center;
         }
+
         form{
             background: ghostwhite;
+            display: inline-block;
+            border: 15px solid #f1f1f1;
+            border-width:5px;
+            border-radius: 18px;
+            width: 450px;
             padding: 40px;
             max-width: 40%;
             /*height: 500px;*/
             margin: 40px auto;
         }
-        table{
-            background: ghostwhite;
-        }
 
-        div{
-            background: ghostwhite;
+        input[type=submit] {
+            padding:5px 15px;
+            background:##016ABC;
+            border:0 none;
+            border-radius: 20px;
+            text-shadow: none;
         }
     </style>
 </head>
-
 <body>
 <div th:insert="components :: navbar"></div>
 
@@ -35,37 +44,37 @@
 
     First Name: <input type="text" placeholder="First Name" th:field="*{firstName}" id="firstName"/>
     <mark><strong>
-        <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Invalid first name </span>
+        <span th:if="${#fields.hasErrors('firstName')}">Invalid first name </span>
     </strong></mark>
     <br/>
 
     Last Name: <input type="text" placeholder="Last Name" th:field="*{lastName}" id="lastName"/>
     <mark><strong>
-        <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Invalid Last name </span>
+        <span th:if="${#fields.hasErrors('lastName')}">Invalid Last name </span>
     </strong></mark>
     <br/>
 
     Email: <input type="email" placeholder="Email" th:field="*{email}" id="email">
     <mark><strong>
-        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Invalid email format </span>
+        <span th:if="${#fields.hasErrors('email')}">Invalid email format </span>
     </strong></mark>
     <br/>
 
     Username: <input type="text" placeholder="User Name" th:field="*{username}" id="username"/>
     <mark><strong>
-        <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Invalid first name </span>
+        <span th:if="${#fields.hasErrors('username')}">Invalid username </span>
     </strong></mark>
     <br/>
 
     Password: <input type="text" placeholder="password" th:field="*{password}" id="password"/>
     <mark><strong>
-        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Invalid first name </span>
+        <span th:if="${#fields.hasErrors('password')}">Invalid password </span>
     </strong></mark>
     <br/>
 
     Group ID: <input type="text" placeholder="If no group, enter 0" th:field="*{groupId}" id="groupID"/>
     <mark><strong>
-        <span th:if="${#fields.hasErrors('password')}" th:errors="*{groupId}">Invalid group ID</span>
+        <span th:if="${#fields.hasErrors('groupId')}">Invalid group ID</span>
     </strong></mark>
     <br/>
 

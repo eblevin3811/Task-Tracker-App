@@ -3,6 +3,7 @@ package com.example.demo;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -55,6 +56,7 @@ public class HomeController {
     //Principle retains all the information for the current user
     public String secure(Principal principal, Model model){
         String username = principal.getName();
+
         model.addAttribute("user", userRepository.findByUsername(username));
         //How to add the role into the model after matching it with user name
         model.addAttribute("roles", roleRepository.findAllByUsername(username));
@@ -74,7 +76,7 @@ public class HomeController {
     }
     @PostMapping("/register")
     public String processRegisterationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
-        model.addAttribute("user", user);//was inside the if with teachers
+        model.addAttribute("user", user);
 
         if (result.hasErrors()) {
             user.clearPassword();
@@ -180,8 +182,6 @@ public class HomeController {
 
     @PostMapping(value = "/edit-todo")
     public String postEditedTodo(@Valid @ModelAttribute("task") Task task, BindingResult result, Model model, Principal principal) throws NotFoundException {
-
-        //Task task = taskRepository.findById(id);
 
         //Check for errors in user form
         if (result.hasErrors()) {
@@ -421,10 +421,24 @@ public class HomeController {
 
         Set<Task> tasksInFolder = new HashSet<>();
         Iterator<FolderTaskPair> iterator = folderTaskPair.iterator();
+        Set<UserTaskPair> userTaskPairSet;
+        UserTaskPair currentpair;
+        Task taskInList;
+        long taskId;
+        String username = principal.getName();
+        User currentUser = userRepository.findByUsername(username);
 
         while (iterator.hasNext()){
-            Task taskInList = taskRepository.findById(iterator.next().getTaskId());
-            System.out.println(taskInList.getName());
+            //Get task id
+            taskId = iterator.next().getTaskId();
+
+            //Find associated user-task pair
+            currentpair = userTaskPairRepository.findByTaskIdAndUserId(taskId, currentUser.getId());
+
+            //Get task from user-task pair
+            taskInList = taskRepository.findById(currentpair.getTaskId());
+
+            //Add task to tasksInFolder
             tasksInFolder.add(taskInList);
         }
 
@@ -433,6 +447,9 @@ public class HomeController {
 
         //Add folders to list-todos page
         model.addAttribute("folder", currentFolder);
+
+        User user = userRepository.findByUsername(principal.getName());
+        model.addAttribute("groupId", user.getGroupId());
 
         return "view-folder";
     }
@@ -451,6 +468,25 @@ public class HomeController {
         User user = userRepository.findByUsername(principal.getName());
         Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
 
+        //Remove users who have been assigned the task
+        groupMembers.remove(user);
+
+        Iterator<User> iterator = groupMembers.iterator();
+        Set<UserTaskPair> taskPairs;
+        Set<UserTaskPair> targetTaskPair;
+        while(iterator.hasNext()){
+
+            //Check if group member has task in their list
+            User currentUser = iterator.next();
+            taskPairs = userTaskPairRepository.findAllByUserId(currentUser.getId());
+            targetTaskPair = userTaskPairRepository.findAllByTaskId(taskId);
+
+            //Remove group member from list if they have it
+            if(targetTaskPair.size() != 0){
+                groupMembers.remove(currentUser);
+            }
+        }
+
         //Get task from url
         Task currentTask = taskRepository.findById(taskId);
 
@@ -467,6 +503,23 @@ public class HomeController {
         //Get group list from user
         User user = userRepository.findByUsername(principal.getName());
         Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
+        groupMembers.remove(user);
+
+        Iterator<User> iterator = groupMembers.iterator();
+        Set<UserTaskPair> taskPairs;
+        Set<UserTaskPair> targetTaskPair;
+        while(iterator.hasNext()){
+
+            //Check if group member has task in their list
+            User currentUser = iterator.next();
+            taskPairs = userTaskPairRepository.findAllByUserId(currentUser.getId());
+            targetTaskPair = userTaskPairRepository.findAllByTaskId(taskId);
+
+            //Remove group member from list if they have it
+            if(targetTaskPair.size() != 0){
+                groupMembers.remove(currentUser);
+            }
+        }
 
         //Get task from url
         Task currentTask = taskRepository.findById(taskId);
