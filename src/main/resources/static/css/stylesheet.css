@@ -1,6 +1,6 @@
 body {
     text-align: center;
-    background-color: #F8F0FB;
+    background-color: snow;
 }
 
 h1 {
@@ -13,12 +13,12 @@ h1 {
 }
 
 form {
+    background: ghostwhite;
     display: inline-block;
-    border: 15px solid #A8C4A8;
-    border-width: 2px;
-    border-radius: 10px;
+    border: 15px solid #f1f1f1;
+    border-width:5px;
+    border-radius: 18px;
     width: 280px;
-    background-color: #F8F0FB;
 }
 
 input, form {
@@ -42,10 +42,10 @@ input, form {
     height: 10px;
 }
 
-input[type=submit] {
+input[type=submit], [type=button] {
     padding:5px 15px;
-    background: #CAD5CA;
+    background:##016ABC;
     border:0 none;
-    border-radius: 5px;
+    border-radius: 20px;
     text-shadow: none;
 }
