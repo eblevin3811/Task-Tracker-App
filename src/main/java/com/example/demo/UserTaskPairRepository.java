@@ -11,5 +11,7 @@ public interface UserTaskPairRepository extends JpaRepository<UserTaskPair, Long
     Set<UserTaskPair> findAllByTaskId(long taskId);
 
     Set<UserTaskPair> findAllByUserId(long userId);
+
+    UserTaskPair findByTaskIdAndUserId(long taskId, long userId);
 }
 

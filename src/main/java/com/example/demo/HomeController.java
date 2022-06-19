@@ -421,9 +421,24 @@ public class HomeController {
 
         Set<Task> tasksInFolder = new HashSet<>();
         Iterator<FolderTaskPair> iterator = folderTaskPair.iterator();
+        Set<UserTaskPair> userTaskPairSet;
+        UserTaskPair currentpair;
+        Task taskInList;
+        long taskId;
+        String username = principal.getName();
+        User currentUser = userRepository.findByUsername(username);
 
         while (iterator.hasNext()){
-            Task taskInList = taskRepository.findById(iterator.next().getTaskId());
+            //Get task id
+            taskId = iterator.next().getTaskId();
+
+            //Find associated user-task pair
+            currentpair = userTaskPairRepository.findByTaskIdAndUserId(taskId, currentUser.getId());
+
+            //Get task from user-task pair
+            taskInList = taskRepository.findById(currentpair.getTaskId());
+
+            //Add task to tasksInFolder
             tasksInFolder.add(taskInList);
         }
 
@@ -452,7 +467,25 @@ public class HomeController {
         //Add everything back to model
         User user = userRepository.findByUsername(principal.getName());
         Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
+
+        //Remove users who have been assigned the task
         groupMembers.remove(user);
+
+        Iterator<User> iterator = groupMembers.iterator();
+        Set<UserTaskPair> taskPairs;
+        Set<UserTaskPair> targetTaskPair;
+        while(iterator.hasNext()){
+
+            //Check if group member has task in their list
+            User currentUser = iterator.next();
+            taskPairs = userTaskPairRepository.findAllByUserId(currentUser.getId());
+            targetTaskPair = userTaskPairRepository.findAllByTaskId(taskId);
+
+            //Remove group member from list if they have it
+            if(targetTaskPair.size() != 0){
+                groupMembers.remove(currentUser);
+            }
+        }
 
         //Get task from url
         Task currentTask = taskRepository.findById(taskId);
@@ -471,6 +504,22 @@ public class HomeController {
         User user = userRepository.findByUsername(principal.getName());
         Set<User> groupMembers = userRepository.findAllByGroupId(user.getGroupId());
         groupMembers.remove(user);
+
+        Iterator<User> iterator = groupMembers.iterator();
+        Set<UserTaskPair> taskPairs;
+        Set<UserTaskPair> targetTaskPair;
+        while(iterator.hasNext()){
+
+            //Check if group member has task in their list
+            User currentUser = iterator.next();
+            taskPairs = userTaskPairRepository.findAllByUserId(currentUser.getId());
+            targetTaskPair = userTaskPairRepository.findAllByTaskId(taskId);
+
+            //Remove group member from list if they have it
+            if(targetTaskPair.size() != 0){
+                groupMembers.remove(currentUser);
+            }
+        }
 
         //Get task from url
         Task currentTask = taskRepository.findById(taskId);
