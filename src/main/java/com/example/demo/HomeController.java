@@ -421,7 +421,6 @@ public class HomeController {
 
         Set<Task> tasksInFolder = new HashSet<>();
         Iterator<FolderTaskPair> iterator = folderTaskPair.iterator();
-        Set<UserTaskPair> userTaskPairSet;
         UserTaskPair currentpair;
         Task taskInList;
         long taskId;
@@ -506,17 +505,15 @@ public class HomeController {
         groupMembers.remove(user);
 
         Iterator<User> iterator = groupMembers.iterator();
-        Set<UserTaskPair> taskPairs;
-        Set<UserTaskPair> targetTaskPair;
+        UserTaskPair targetTaskPair;
         while(iterator.hasNext()){
 
             //Check if group member has task in their list
             User currentUser = iterator.next();
-            taskPairs = userTaskPairRepository.findAllByUserId(currentUser.getId());
-            targetTaskPair = userTaskPairRepository.findAllByTaskId(taskId);
+            targetTaskPair = userTaskPairRepository.findByTaskIdAndUserId(taskId, currentUser.getId());
 
             //Remove group member from list if they have it
-            if(targetTaskPair.size() != 0){
+            if(targetTaskPair != null){
                 groupMembers.remove(currentUser);
             }
         }

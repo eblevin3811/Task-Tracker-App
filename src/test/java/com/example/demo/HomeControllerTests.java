@@ -556,17 +556,25 @@ public class HomeControllerTests {
 
     @Test
     public void viewTasksInFolder_FolderHasTasks() throws Exception{
-        //Arrange
-        when(folderRepository.findById(id)).thenReturn(folderStub);
-        Set<FolderTaskPair> folderTaskPairs = new HashSet<FolderTaskPair>();
-        folderTaskPairs.add(folderTaskPairStub);
-        when(folderTaskPairRepository.findAllByFolderId(id)).thenReturn(folderTaskPairs);
+        long folderId = id;
 
-        when(folderTaskPairStub.getTaskId()).thenReturn(id);
-        when(taskRepository.findById(id)).thenReturn(taskStub);
+        //Arrange
+        when(folderRepository.findById(folderId)).thenReturn(folderStub);
+
+        Set<FolderTaskPair> pairs = new HashSet<FolderTaskPair>();
+        pairs.add(folderTaskPairStub);
+        when(folderTaskPairRepository.findAllByFolderId(folderId)).thenReturn(pairs);
 
         when(principal.getName()).thenReturn(defaultName);
         when(userRepository.findByUsername(defaultName)).thenReturn(userStub);
+
+        when(folderTaskPairStub.getTaskId()).thenReturn(id);
+        when(userStub.getId()).thenReturn(id);
+        when(userTaskPairRepository.findByTaskIdAndUserId(id, id)).thenReturn(userTaskPairStub);
+
+        when(userTaskPairStub.getTaskId()).thenReturn(id);
+        when(taskRepository.findById(id)).thenReturn(taskStub);
+
         when(userStub.getGroupId()).thenReturn((int)id);
 
         //Act
@@ -596,7 +604,9 @@ public class HomeControllerTests {
         when(userRepository.findAllByGroupId(groupId)).thenReturn(groupMembers);
 
         when(taskRepository.findById(id)).thenReturn(taskStub);
-
+        Set<UserTaskPair> targetTaskPair = new HashSet<UserTaskPair>();
+        targetTaskPair.add(userTaskPairStub);
+        when(userTaskPairRepository.findAllByTaskId(id)).thenReturn(targetTaskPair);
         //Act
         String sent = homeController.assignTaskToGroupMember(id, memberName, principal, model);
 
@@ -613,9 +623,13 @@ public class HomeControllerTests {
         when(userRepository.findByUsername(defaultName)).thenReturn(userStub);
         when(userStub.getGroupId()).thenReturn(groupId);
 
-        Set<User> users = new HashSet<User>();
-        users.add(userStub);
-        when(userRepository.findAllByGroupId(groupId)).thenReturn(users);
+        Set<User> groupMembers = new HashSet<User>();
+        groupMembers.add(userStub);
+        groupMembers.add(groupMember);
+        when(userRepository.findAllByGroupId(groupId)).thenReturn(groupMembers);
+
+        when(groupMember.getId()).thenReturn(id);
+        when(userTaskPairRepository.findByTaskIdAndUserId(id, id)).thenReturn(userTaskPairStub);
 
         when(taskRepository.findById(id)).thenReturn(taskStub);
 
