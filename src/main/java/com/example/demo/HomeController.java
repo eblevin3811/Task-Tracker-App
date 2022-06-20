@@ -74,6 +74,7 @@ public class HomeController {
         model.addAttribute("user", new User());
         return "register";
     }
+
     @PostMapping("/register")
     public String processRegisterationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
         model.addAttribute("user", user);
