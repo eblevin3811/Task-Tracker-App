@@ -1,156 +1,80 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:insert="components :: meta-links"></div>
-    <meta charset="UTF-8">
-    <title>Index/Home</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <style>
-        body {
-           text-align: center;
-           background-color: snow;
-        }
 
-        form {
-            background: ghostwhite;
-            padding: 40px;
-            max-width: 40%;
-            /*height: 500px;*/
-            margin: 40px auto;
-        }
-
-        input[type=submit], [type=button] {
-            padding:5px 15px;
-            background:##016ABC;
-            border:0 none;
-            border-radius: 20px;
-            text-shadow: none;
-        }
-
-        .features-wrap {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-evenly;
-            margin-right: -32px;
-            margin-left: -32px;
-
-            &:first-of-type {
-                margin-top: -16px;
-            }
-
-            &:last-of-type {
-                margin-bottom: -16px;
-            }
-        }
-
-        .feature {
-            padding: 16px 32px;
-            width: 380px;
-            max-width: 380px;
-            flex-grow: 1;
-        }
-
-        .feature-inner {
-            height: 100%;
-        }
-
-        .feature-icon {
-	        display: flex;
-            justify-content: center;
-        }
-
-        @include media( '>medium' ) {
-
-            .features-wrap {
-
-                &:first-of-type {
-                    margin-top: -24px;
-                }
-
-                &:last-of-type {
-                    margin-bottom: -24px;
-                }
-            }
-
-            .feature {
-                padding: 32px 32px;
-            }
-        }
-
-        .section-inner {
-            position: relative; /* To always display inner elements above pseudo decorative stuff */
-            padding-top: 48px;
-            padding-bottom: 48px;
-        }
-
-        @include media( '>medium' ) {
-
-            .section-inner {
-                padding-top: 88px;
-                padding-bottom: 88px;
-            }
-        }
-    </style>
-
-</head>
-
-<body>
-    <div th:insert="components :: navbar"></div>
-    <div class="container">
-        <h2 class ="text-center">Welcome to Team 2 Task Tracker App</h2>
-        <hr/>
-        <img src="/images/taskList.jpg" alt="Task List" class="center">
-
-        <div>
-            <h1 class="hero-title mt-0">The Ultimate Task Tracker</h1>
-            <p class="hero-paragraph">Our Task Tracker app is compatible with on all web flatforms, so you only need a device along with a browser and Wi-Fi connection, and get all of your work progress organized and in check.</p>
-            <a class="btn btn-primary ml-1" href="/register">Register Now</a>
-            <a class="btn btn-success" href="/login">Login</a>
+<div th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door" viewBox="0 0 16 16">
+                            <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z"/>
+                        </svg>
+                        <i class="bi bi-house-door"></i>
+                        Task Tracker<span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ml-1" th:href="@{/list-todos}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-check" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3.854 2.146a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 3.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708L2 7.293l1.146-1.147a.5.5 0 0 1 .708 0zm0 4a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+                        </svg>
+                        <i class="bi bi-list-check"></i>
+                        My Tasks
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ml-1" th:href="@{/add-todo}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                        <i class="bi bi-plus-circle"></i>
+                        Create
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ml-1" th:href="@{/login}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z"/>
+                            <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                        </svg>
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/>
+                            <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                        </svg>
+                        <i class="bi bi-box-arrow-left"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
         </div>
-        <hr/>
+    </nav>
+</div>
 
-        <h3>Benefits of using our Task Tracker App</h3>
-        <section class="features section">
-            <div class="container">
-                <div class="features-inner section-inner has-bottom-divider">
-                    <div class="features-wrap">
-                        <div class="feature text-center is-revealing">
-                            <div class="feature-inner">
-                                <div class="feature-icon">
-                                    <img src="images/feature-icon-01.svg" alt="Feature 01">
-                                </div>
-                                <h4 class="feature-title mt-24">Boost Productivity</h4>
-                                <p class="text-sm mb-0">A task tracker can help you organize your business and personal responsibilities both at work and home. This allows you to prioritize and do the most important things first as well as manage your time better.</p>
-                            </div>
-                        </div>
-                        <div class="feature text-center is-revealing">
-                            <div class="feature-inner">
-                                <div class="feature-icon">
-                                    <img src="images/feature-icon-02.svg" alt="Feature 02">
-                                </div>
-                                <h4 class="feature-title mt-24">Maintain Motivation</h4>
-                                <p class="text-sm mb-0">You can do more and lessen stress if you have the right motivation. A task tracker makes it easier to organize everything you want to get done during the day. Crossing stuff off a list might also help you stay motivated.</p>
-                            </div>
-                        </div>
-                        <div class="feature text-center is-revealing">
-                            <div class="feature-inner">
-                                <div class="feature-icon">
-                                    <img src="../static/images/feature-icon-03.svg" alt="Feature 03" th:src="@{images/feature-icon-03.svg}" />
-                                </div>
-                                <h4 class="feature-title mt-24">Memory Improvement</h4>
-                                <p class="text-sm mb-0">You might remember more information if you write down chores and short-term goals and check the list frequently. Making a daily list can help you remember things and ensure that all of your critical activities are finished on time..</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
+<div th:fragment="meta-links">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <link th:href="@{/styles/main.css}" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous">
+    </script>
+</div>
 
-
-
-</body>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </html>
