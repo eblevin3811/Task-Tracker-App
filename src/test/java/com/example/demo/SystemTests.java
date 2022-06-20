@@ -137,7 +137,7 @@ public class SystemTests {
         assertThat(userRepository.findByUsername("Username"));
 
         //Login
-        success = homeController.login();
+        success = homeController.login(null, model);
         assertThat(success.equals("login"));
 
         assertThat(newUser.getUsername().equals("Username"));
@@ -187,7 +187,7 @@ public class SystemTests {
         assertThat(userRepository.findByUsername("Username"));
 
         //Login
-        success = homeController.login();
+        success = homeController.login(null, model);
         assertThat(success.equals("login"));
 
         assertThat(newUser.getUsername().equals("Username"));
@@ -205,7 +205,7 @@ public class SystemTests {
         userRepository.save(userStub);
 
         //Login
-        String success = homeController.login();
+        String success = homeController.login(null, model);
         assertThat(success.equals("login"));
 
         //Logout
