@@ -51,7 +51,7 @@
                     <a th:href="@{'/edit-todo?id=' + ${todo.id}}" class="btn btn-info ml-1">Edit</a>
                     <a th:href="@{'/sort?id=' + ${todo.id}}" class="btn btn-secondary ml-1">Sort</a>
                     <span th:unless="${groupId == 0}">
-                        <a th:href="@{'/assign?id=' + ${todo.id}}" class="btn btn-warning ml-1">Assign</a>
+                        <a th:href="@{'/assign?id=' + ${todo.id}}" class="btn btn-warning mt-1">Assign</a>
                     </span>
                 </td>
             </tr>

@@ -127,13 +127,41 @@ public class HomeControllerTests {
         assertThat(sent.equals("index"));
     }
 
+    //Ben's modification
     @Test
-    public void loginTest() throws Exception{
+    public void loginTestNotLoggedIn() throws Exception{
         //Act
-        String sent = homeController.login();
+        String sent = homeController.login(null, model);
 
         //Assert
         assertThat(sent.equals("login"));
+    }
+
+    //Ben's modification
+    @Test
+    public void loginTestLoggedIn() throws Exception{
+
+        when(principal.getName()).thenReturn(defaultName);
+        when(userRepository.findByUsername(defaultName)).thenReturn(userStub);
+
+        Set<UserTaskPair> pairs = new HashSet<UserTaskPair>();
+        pairs.add(userTaskPairStub);
+        when(userStub.getId()).thenReturn(id);
+        when(userTaskPairRepository.findAllByUserId(id)).thenReturn(pairs);
+
+        when(userTaskPairStub.getTaskId()).thenReturn(id);
+        when(taskRepository.findById(id)).thenReturn(taskStub);
+
+        Set<Folder> folders = new HashSet<Folder>();
+        folders.add(folderStub);
+        when(folderRepository.findAllByCreator(defaultName)).thenReturn(folders);
+        when(userStub.getGroupId()).thenReturn((int) id);
+
+        //Act
+        String sent = homeController.login(principal, model);
+
+        //Assert
+        assertThat(sent.equals("list-todos"));
     }
 
     @Test
