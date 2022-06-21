@@ -127,13 +127,41 @@ public class HomeControllerTests {
         assertThat(sent.equals("index"));
     }
 
+    //Ben's modification
     @Test
-    public void loginTest() throws Exception{
+    public void loginTestNotLoggedIn() throws Exception{
         //Act
-        String sent = homeController.login();
+        String sent = homeController.login(null, model);
 
         //Assert
         assertThat(sent.equals("login"));
+    }
+
+    //Ben's modification
+    @Test
+    public void loginTestLoggedIn() throws Exception{
+
+        when(principal.getName()).thenReturn(defaultName);
+        when(userRepository.findByUsername(defaultName)).thenReturn(userStub);
+
+        Set<UserTaskPair> pairs = new HashSet<UserTaskPair>();
+        pairs.add(userTaskPairStub);
+        when(userStub.getId()).thenReturn(id);
+        when(userTaskPairRepository.findAllByUserId(id)).thenReturn(pairs);
+
+        when(userTaskPairStub.getTaskId()).thenReturn(id);
+        when(taskRepository.findById(id)).thenReturn(taskStub);
+
+        Set<Folder> folders = new HashSet<Folder>();
+        folders.add(folderStub);
+        when(folderRepository.findAllByCreator(defaultName)).thenReturn(folders);
+        when(userStub.getGroupId()).thenReturn((int) id);
+
+        //Act
+        String sent = homeController.login(principal, model);
+
+        //Assert
+        assertThat(sent.equals("list-todos"));
     }
 
     @Test
@@ -615,6 +643,35 @@ public class HomeControllerTests {
     }
 
     @Test
+    public void assignTaskToGroupMemberTest_PairListSizeZero() throws Exception{
+        //Arrange
+        String memberName = "otherguy";
+        long otherUserId = 2;
+        int groupId = 101;
+
+        when(userRepository.findByUsername(memberName)).thenReturn(groupMember);
+        when(groupMember.getId()).thenReturn(otherUserId);
+        when(principal.getName()).thenReturn(defaultName);
+
+        when(principal.getName()).thenReturn(defaultName);
+        when(userRepository.findByUsername(defaultName)).thenReturn(userStub);
+        when(userStub.getGroupId()).thenReturn(groupId);
+        Set<User> groupMembers = new HashSet<User>();
+        groupMembers.add(groupMember);
+        groupMembers.add(userStub);
+        when(userRepository.findAllByGroupId(groupId)).thenReturn(groupMembers);
+
+        when(taskRepository.findById(id)).thenReturn(taskStub);
+        Set<UserTaskPair> targetTaskPair = new HashSet<UserTaskPair>();
+        when(userTaskPairRepository.findAllByTaskId(id)).thenReturn(targetTaskPair);
+        //Act
+        String sent = homeController.assignTaskToGroupMember(id, memberName, principal, model);
+
+        //Assert
+        assertThat(sent.equals("assign"));
+    }
+
+    @Test
     public void showAssignmentListTest() throws Exception{
         //Arrange
         int groupId = 50;
@@ -630,6 +687,32 @@ public class HomeControllerTests {
 
         when(groupMember.getId()).thenReturn(id);
         when(userTaskPairRepository.findByTaskIdAndUserId(id, id)).thenReturn(userTaskPairStub);
+
+        when(taskRepository.findById(id)).thenReturn(taskStub);
+
+        //Act
+        String sent = homeController.showAssignmentList(id, model, principal);
+
+        //Assert
+        assertThat(sent.equals("assign"));
+    }
+
+    @Test
+    public void showAssignmentList_NullPairBranch() throws Exception{
+        //Arrange
+        int groupId = 50;
+
+        when(principal.getName()).thenReturn(defaultName);
+        when(userRepository.findByUsername(defaultName)).thenReturn(userStub);
+        when(userStub.getGroupId()).thenReturn(groupId);
+
+        Set<User> groupMembers = new HashSet<User>();
+        groupMembers.add(userStub);
+        groupMembers.add(groupMember);
+        when(userRepository.findAllByGroupId(groupId)).thenReturn(groupMembers);
+
+        when(groupMember.getId()).thenReturn(id);
+        when(userTaskPairRepository.findByTaskIdAndUserId(id, id)).thenReturn(null);
 
         when(taskRepository.findById(id)).thenReturn(taskStub);
 

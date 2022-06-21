@@ -15,6 +15,7 @@ class SpringSecurity404ApplicationTests {
     @Test
     void contextLoads() {}
 
+    //Application runs?
     @Test
     public void mainTest() throws Exception{
         springSecurity404Application.main(new String[] {});

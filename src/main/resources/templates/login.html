@@ -40,7 +40,7 @@
             height: 10px;
         }
 
-        input[type=submit] {
+        input[type=submit], [type=button] {
             padding:5px 15px;
             background:##016ABC;
             border:0 none;
@@ -48,24 +48,8 @@
             text-shadow: none;
         }
     </style>
-</head>
-<!--<style>
-    body{
-        font-family: Optima;
-        font-size: medium;
-        background-color: rgba(0, 167, 209, 0.99);
-        alignment: center;
-    }
-    form{
-        background: ghostwhite;
-        padding: 40px;
-        max-width: 40%;
-        /*height: 500px;*/
-        margin: 40px auto;
-    }
-</style>-->
 
-</style>
+</head>
 <body>
 <div th:insert="components :: navbar"></div>
 
@@ -88,6 +72,10 @@
 </div>
 
 <input type="submit" value="Login">
+
+<a th:href="@{/register}">
+    <input type="button" value="Register">
+</a>
 </form>
 
 

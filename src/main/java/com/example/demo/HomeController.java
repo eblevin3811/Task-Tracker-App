@@ -39,9 +39,18 @@ public class HomeController {
     public String index() {
         return "index"; }
 
+    //Ben's modification
     @RequestMapping("/login")
-    public String login() {
-        return "login";
+    public String login(Principal principal0, Model model0) {
+        //Checking if user is logged in
+        if(principal0 == null) {
+            return "login";
+        }
+        //Return task list of current logged-in user
+        else {
+            //Calling listTodos method to generate user's task list
+            return listTodos(principal0, model0);
+        }
     }
 
     @PostMapping("/logout")
@@ -74,6 +83,7 @@ public class HomeController {
         model.addAttribute("user", new User());
         return "register";
     }
+
     @PostMapping("/register")
     public String processRegisterationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
         model.addAttribute("user", user);
