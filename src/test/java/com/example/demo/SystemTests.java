@@ -257,6 +257,7 @@ public class SystemTests {
 
         //Existing user logged in
         userStub = new User("testUser", "test@email.com", "testPassword", "testFirst", "testLast", true, 0);
+        userStub.setId(id);
         userRepository.save(userStub);
         when(principal.getName()).thenReturn("testUser");
         when(userRepository.findByUsername("testUser")).thenReturn(userStub);
@@ -264,6 +265,7 @@ public class SystemTests {
         //Existing task in list
         Date deadline = new Date(2022, 2, 2);
         taskStub = new Task("taskName", "taskDesc", "testUser", deadline, false);
+        taskStub.setId(id);
         taskRepository.save(taskStub);
         when(taskRepository.findById(taskStub.getId())).thenReturn(taskStub);
 
@@ -286,6 +288,12 @@ public class SystemTests {
 
         //Task completion status should be true
         assertThat(taskStub.getCompletionStatus());
+
+        //Other task info should remain the same
+        assertThat(taskStub.getName().equals("taskName"));
+        assertThat(taskStub.getDescription().equals("taskDesc"));
+        assertThat(taskStub.getDeadline().equals(deadline));
+        assertThat(taskStub.getUsername().equals("testUser"));
     }
 
     //User views their task list and creates a folder
@@ -314,6 +322,7 @@ public class SystemTests {
         Folder newfolder = new Folder();
         newfolder.setFolderName("testFolder");
         newfolder.setCreator("testUser");
+        newfolder.setId(id);
 
         success = homeController.processAddFolderPage(newfolder, result, model, principal);
 
@@ -325,6 +334,11 @@ public class SystemTests {
 
         //Folder should be on list page
         assertThat(model.containsAttribute(String.valueOf(newfolder)));
+
+        //Folder info should be intact
+        assertThat(newfolder.getFolderName().equals("testFolder"));
+        assertThat(newfolder.getCreator().equals("testUser"));
+        assertThat(newfolder.getId() == id);
     }
 
     //User views their task list and sorts a task into a folder
@@ -344,11 +358,17 @@ public class SystemTests {
         taskRepository.save(taskStub);
         when(taskRepository.findById(taskStub.getId())).thenReturn(taskStub);
 
+        userTaskPairStub = new UserTaskPair();
+        userTaskPairStub.setUserId(userStub.getId());
+        userTaskPairStub.setTaskId(taskStub.getId());
+        userTaskPairStub.setId(id);
+
         //Existing task in folder
         folderStub = new Folder("testFolder", "testUser");
         folderRepository.save(folderStub);
         when(folderRepository.findById(folderStub.getId())).thenReturn(folderStub);
         folderTaskPairStub = new FolderTaskPair(folderStub.getId(), userStub.getId());
+        folderTaskPairStub.setId(id);
         folderTaskPairRepository.save(folderTaskPairStub);
 
         //Navigate to index
@@ -374,6 +394,19 @@ public class SystemTests {
         success = homeController.viewTasksInFolder(folderStub.getId(), principal, model);
         assertThat(success.equals("view-folder"));
         assertThat(model.containsAttribute(String.valueOf(taskStub)));
+
+        //Folder and task should be the same
+        FolderTaskPair samePair = new FolderTaskPair();
+        samePair.setFolderId(id);
+        samePair.setTaskId(taskStub.getId());
+        samePair.setFolderId(folderStub.getId());
+        assertThat(folderTaskPairStub.getFolderId() == samePair.getFolderId());
+        assertThat(folderTaskPairStub.getTaskId() == samePair.getTaskId());
+        assertThat(folderTaskPairStub.getId() == samePair.getId());
+
+        assertThat(userTaskPairStub.getId() == id);
+        assertThat(userTaskPairStub.getUserId() == userStub.getId());
+        assertThat(userTaskPairStub.getTaskId() == taskStub.getId());
     }
 
     //User views their task list and edits a task's description, deadline and name
@@ -495,5 +528,46 @@ public class SystemTests {
 
         //Task should not be in repo
         assertThat(taskRepository.findById(taskStub.getId()) == null);
+    }
+
+    //Admin accesses admin page
+    @Test
+    public void adminPageTest() throws Exception{
+        //Existing user logged in
+        userStub = new User("testUser", "test@email.com", "testPassword", "testFirst", "testLast", true, 123);
+        userRepository.save(userStub);
+        when(principal.getName()).thenReturn("testUser");
+        when(userRepository.findByUsername("testUser")).thenReturn(userStub);
+
+        roleStub = new Role();
+        roleStub.setRole("ADMIN");
+        roleStub.setId(id);
+        roleStub.setUsername("testUser");
+        roleRepository.save(roleStub);
+
+        Role sameRole = new Role("testUser", "ADMIN");
+        sameRole.setId(id);
+
+        String success = homeController.admin();
+
+        assertThat(success.equals("admin"));
+        assertThat(roleStub.getRole().equals(sameRole.getRole()));
+        assertThat(roleStub.getUsername().equals(sameRole.getRole()));
+        assertThat(roleStub.getId() == sameRole.getId());
+    }
+
+    //Logged in user accesses account info
+    @Test
+    public void userViewAccountInfo() throws Exception{
+        //Existing user logged in
+        userStub = new User("testUser", "test@email.com", "testPassword", "testFirst", "testLast", true, 123);
+        userRepository.save(userStub);
+        when(principal.getName()).thenReturn("testUser");
+        when(userRepository.findByUsername("testUser")).thenReturn(userStub);
+
+        String success = homeController.secure(principal, model);
+
+        assertThat(success.equals("secure"));
+        assertThat(model.containsAttribute(String.valueOf(userStub)));
     }
 }
