@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.unit;
 
+import com.example.demo.Folder;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 

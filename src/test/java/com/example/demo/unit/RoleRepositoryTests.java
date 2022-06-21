@@ -1,5 +1,7 @@
-package com.example.demo;
+package com.example.demo.unit;
 
+import com.example.demo.Role;
+import com.example.demo.RoleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

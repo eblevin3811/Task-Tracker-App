@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.unit;
 
+import com.example.demo.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import static org.assertj.core.api.Assertions.assertThat;
