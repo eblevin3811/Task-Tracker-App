@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.system;
 
 import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.Matchers.containsString;
@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.example.demo.*;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +42,10 @@ public class SystemTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Spy
+    @InjectMocks
+    private SpringSecurity404Application springSecurity404Application;
 
     @Spy
     @InjectMocks
@@ -98,6 +103,12 @@ public class SystemTests {
         MockitoAnnotations.initMocks(this);
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(homeController).build();
+    }
+
+    //Program runs
+    @Test
+    public void programRuns() throws Exception{
+        springSecurity404Application.main(new String[] {});
     }
 
     //User registers without a group and logs in

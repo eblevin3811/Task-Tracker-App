@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.unit;
 
+import com.example.demo.SpringSecurity404Application;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
